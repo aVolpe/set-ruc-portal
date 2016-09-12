@@ -39,11 +39,12 @@ ex.loadDataFromSet = function(success) {
     
     db.run('CREATE TABLE ' + data.tableName + ' (doc TEXT, name TEXT, div TEXT, old TEXT)', [],  function() {
       var stmt = db.prepare('INSERT INTO ' + data.tableName + ' VALUES ($doc, $name, $div, $old)');
-        
+      var i = 0;
       set_parser.readByRow(function newLine(row) {
-         stmt.run(row);
+        console.log('Valor numero ' + i++);
+        stmt.run(row);
       }, function endStream() {
-         stmt.finalize(success);
+        stmt.finalize(success);
       });
     });
 };
@@ -61,21 +62,6 @@ ex.findByRuc = function(query, success) {
         },
         function(err, rows) {
             if (!err) return success(rows);
-            // console.log(err);
+            console.log(err);
         });
 };
-
-ex.init();
-ex.hasData(function(hasData) {
-    function doQuery() {
-        ex.findByRuc('99', function(data) {
-            console.log(data);
-        });
-    }
-    
-    if (!hasData) { 
-        console.log('loading data...');
-        ex.loadDataFromSet(doQuery);
-    }
-    else doQuery();
-})
