@@ -1,21 +1,32 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Link } from 'react-router'
 
 class App extends Component {
+  
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <h1 className="App-header">
+          App
+          <ul>
+            <li><Link to="/search">Buscador</Link></li>
+            <li><Link to="/validate">Validador</Link></li>
+            <li><Link to="/download">Descargar</Link></li>
+          </ul>
+        </h1>
+
+        <div className="App-intro">
+          {/*
+            next we replace `<Child>` with `this.props.children`
+            the router will figure out the children for us
+          */}
+          {this.props.children}
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
-    );
+    )
   }
+  
 }
 
 export default App;
