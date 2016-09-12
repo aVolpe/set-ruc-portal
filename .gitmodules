@@ -1,0 +1,3 @@
+[submodule "set-customers"]
+	path = set-customers
+	url = https://github.com/aVolpe/set-customers.git
