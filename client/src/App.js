@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import './util/pure.css';
 import './App.css';
+
 import { Link, IndexLink } from 'react-router'
 
 class App extends Component {

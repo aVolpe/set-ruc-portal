@@ -34,23 +34,42 @@ class Search extends Component {
   render() {
     return (
       <div>
-        <h1>Buscar RUC's</h1>
-        <form>
-          <label>Ingrese un RUC (o una parte) para buscar:
-            <input 
-              className="ruc-input"
-              placeholder={"1123456, 01-2140"} 
-              type="text" 
-              value={this.state.ruc}
-              onChange={this.changeCurrentRuc} />
-          </label>
-          <div className="results">
-            <ol>
-              {this.state.result.map((i) => {
-                return <li key={i.doc}>{i.name}</li>;
-              })}
-            </ol>
-          </div>
+        <div className="header">
+          <h1>Buscador</h1>
+          <h2>Busca personas por documento</h2>
+        </div>
+        <form className="pure-form">
+          <p>
+            <label>Ingrese un RUC (o una parte) para buscar:
+              <input 
+                className="ruc-input"
+                placeholder={"1123456, 01-2140"} 
+                type="text" 
+                value={this.state.ruc}
+                onChange={this.changeCurrentRuc} />
+            </label>
+            <div className="result-container">
+              <table className="pure-table">
+                <thead>
+                    <tr>
+                        <th>Doc</th>
+                        <th>Nombre</th>
+                        <th>Digito</th>
+                    </tr>
+                </thead>
+                <tbody className="results-body">
+                  {this.state.result.map((i) => {
+                    return (
+                      <tr key={i.doc}>
+                        <th>{i.doc}</th>
+                        <th>{i.name}</th>
+                        <th>{i.div}</th>
+                      </tr>);
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </p>
         </form>
       </div>
     );

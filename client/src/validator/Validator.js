@@ -26,19 +26,21 @@ class Validator extends Component {
   render() {
     return (
       <div>
-        <h1>Digitos verificadores</h1>
-        <form>
-          <label>Deseo obtener el digito validador de
-            <input 
+        <div className="header">
+          <h1>Digitos verificadores</h1>
+          <h2>Verificación rápida de RUCs</h2>
+        </div>
+        <form className="pure-form">
+          <p>
+            <label>El dígito verificador de <input 
               className="ruc-input"
               placeholder={"1123456, 01-2140"} 
               type="text" 
               value={this.state.ruc}
-              onChange={this.changeCurrentRuc} />
-          </label>
+              onChange={this.changeCurrentRuc} /> es <b>{this.state.digit}</b></label>
+          </p>
         </form>
-        <label>El dígito de {this.state.ruc} es {this.state.digit}</label>
-        
+
         <h2> Codigo fuente: </h2>
         <Tabs>
           <TabList>

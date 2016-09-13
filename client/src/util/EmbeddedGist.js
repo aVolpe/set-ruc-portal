@@ -71,6 +71,6 @@ EmbeddedGist.propTypes = {
 var gistCallbackId = 0;
 EmbeddedGist.nextGistCallback = () => {
     return "embed_gist_callback_" + gistCallbackId++;
-}
+};
 
 export default EmbeddedGist;
