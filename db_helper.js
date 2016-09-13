@@ -1,7 +1,7 @@
 var ex = module.exports = {};
 
 var data = ex.data = {
-    dbName : 'db.db',
+    dbName : 'temp/db.db',
     tableName : 'rucs',
     maxResults : 3
 };

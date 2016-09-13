@@ -8,7 +8,7 @@ class Download extends Component {
         <h1>Descargar base de datos</h1>
         <ol>
           <li> JSON </li>
-          <li> CSV </li>
+          <li> CSV (separado por |)</li>
         </ol>
       </div>
     );

@@ -13,7 +13,6 @@ function doWork(output, process) {
     var stream = fs.createWriteStream(output);
     stream.once('open', function(fd) {
         
-        stream.write('ruc|nombre|div|ruc_viejo\n');
         
         lineReader.on('line', function(line) {
             process(stream, line);
@@ -26,7 +25,12 @@ function doWork(output, process) {
 }
 
 function transformCsv() {
+    var first = true;
     doWork(config.csv_dest, function(stream, line) {
+        if (first) {
+            stream.write('ruc|nombre|div|ruc_viejo\n');
+            first = false;
+        }
         if (!line) return;
         var finalLine = line.substr(0, line.lastIndexOf('|'));
         stream.write(finalLine + '\n');
