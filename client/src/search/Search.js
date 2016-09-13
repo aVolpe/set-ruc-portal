@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import './Search.css';
 
+var Config = require('../Config.js');
+
 class Search extends Component {
     
   doFetch = (ruc) => {
-    fetch('https://set-ruc-finder-avolpe.c9users.io:8081/find?query=' + ruc)
+    fetch(Config.URL + 'find?query=' + ruc)
       .then((response) => response.json())
       .then((response) => this.setState({ result : response }));
   }
@@ -25,7 +27,7 @@ class Search extends Component {
      this.doFetch(newRuc);
   }
   
-  state = this.getValues('4787587');
+  state = this.getValues(Config.EXAMPLE_RUC);
   tes = this.doFetch(this.state.ruc);
   
   

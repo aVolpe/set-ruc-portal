@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Validator.css';
 import DigitGenerator from './DigitGenerator';
+var Config = require('../Config.js');
 
 class Validator extends Component {
   
@@ -15,7 +16,7 @@ class Validator extends Component {
     this.setState(this.getValues(evt.target.value));
   };
   
-  state = this.getValues('4787587');
+  state = this.getValues(Config.EXAMPLE_RUC);
   
   render() {
     return (
