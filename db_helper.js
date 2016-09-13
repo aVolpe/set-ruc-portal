@@ -3,7 +3,7 @@ var ex = module.exports = {};
 var data = ex.data = {
     dbName : 'temp/db.db',
     tableName : 'rucs',
-    maxResults : 3
+    maxResults : 10
 };
 
 ex.init = function() {
