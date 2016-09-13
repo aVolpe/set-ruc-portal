@@ -45,9 +45,11 @@ class Search extends Component {
               onChange={this.changeCurrentRuc} />
           </label>
           <div className="results">
+            <ol>
               {this.state.result.map((i) => {
-                return <div> <br/> <code> { i.name } </code> </div>;
+                return <li key={i.doc}>{i.name}</li>;
               })}
+            </ol>
           </div>
         </form>
       </div>
