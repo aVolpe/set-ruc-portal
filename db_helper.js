@@ -49,19 +49,32 @@ ex.loadDataFromSet = function(success) {
     });
 };
 
-/**
- * Queries the database with the given ruc
+/** 
+ * Perfom a simple LIKE operation over a simple property
  */
-ex.findByRuc = function(query, success) {
+function simpleQuery(property, filter, success) {
+    
     if (!data.loaded) ex.init();
     
-    data.db.all('SELECT * FROM ' + data.tableName + ' WHERE doc LIKE $doc LIMIT $size', 
+    data.db.all('SELECT * FROM ' + data.tableName + ' WHERE ' + property + ' LIKE $doc LIMIT $size', 
         { 
-            $doc : '%' + query + '%',
+            $doc : '%' + filter + '%',
             $size : data.maxResults
         },
         function(err, rows) {
             if (!err) return success(rows);
             console.log(err);
         });
+}
+
+/**
+ * Queries the database with the given ruc
+ */
+ex.findByRuc = function(query, success) {
+    simpleQuery('doc', query, success);
 };
+
+ex.findByName = function(query, success) {
+    simpleQuery('name', query, success);
+}
+
