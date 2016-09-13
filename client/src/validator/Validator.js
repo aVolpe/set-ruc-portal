@@ -1,23 +1,28 @@
-import React, { Component } from 'react';
+import React, {
+  Component
+}
+from 'react';
 import './Validator.css';
 import DigitGenerator from './DigitGenerator';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import EmbeddedGist from '../util/EmbeddedGist.js';
 var Config = require('../Config.js');
 
 class Validator extends Component {
-  
+
   getValues = (ruc) => {
     return {
-      ruc : ruc,
-      digit : new DigitGenerator().getDigitoVerificadorBase11(ruc)
+      ruc: ruc,
+      digit: new DigitGenerator().getDigitoVerificadorBase11(ruc)
     };
   }
-  
+
   changeCurrentRuc = (evt) => {
     this.setState(this.getValues(evt.target.value));
   };
-  
+
   state = this.getValues(Config.EXAMPLE_RUC);
-  
+
   render() {
     return (
       <div>
@@ -33,6 +38,20 @@ class Validator extends Component {
           </label>
         </form>
         <label>El dígito de {this.state.ruc} es {this.state.digit}</label>
+        
+        <h2> Codigo fuente: </h2>
+        <Tabs>
+          <TabList>
+            <Tab>Java</Tab>
+            <Tab>JavaScript</Tab>
+          </TabList>
+          <TabPanel>
+            <EmbeddedGist gist="aVolpe/fffbe6a9e9858c7e3546fb1d55782152" file="SetUtils.java"></EmbeddedGist>
+          </TabPanel>
+          <TabPanel>
+            <EmbeddedGist gist="aVolpe/fffbe6a9e9858c7e3546fb1d55782152" file="DigitGenerator.js"></EmbeddedGist>
+          </TabPanel>
+        </Tabs>
       </div>
     );
   }

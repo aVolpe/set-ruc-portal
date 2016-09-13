@@ -3,7 +3,7 @@ import './App.css';
 import { Link, IndexLink } from 'react-router'
 
 class App extends Component {
-  
+
   initPure = function (window, document) {
 
     console.log('iniciando pure');
@@ -44,7 +44,7 @@ class App extends Component {
   componentDidMount() {
     this.initPure(window, document);
   }
-  
+
   render() {
     return (
       <div id="layout">
@@ -54,7 +54,7 @@ class App extends Component {
         <div id="menu">
           <div className="pure-menu">
               <span className="pure-menu-heading">Menu</span>
-          
+
               <ul className="pure-menu-list">
                   <li className="pure-menu-item"><IndexLink activeClassName="pure-menu-selected" className="pure-menu-link" to="/">Buscador</IndexLink></li>
                   <li className="pure-menu-item"><Link activeClassName="pure-menu-selected" className="pure-menu-link" to="validate">Validador</Link></li>
@@ -74,7 +74,7 @@ class App extends Component {
       </div>
     )
   }
-  
+
 }
 
 export default App;

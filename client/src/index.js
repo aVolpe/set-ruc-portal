@@ -14,7 +14,6 @@ ReactDOM.render(
     <Route path="/" component={App}>
       <IndexRoute component={Search} />
       <Route path="validate" component={Validator} />
-      <Route path="search" component={Search} />
       <Route path="download" component={Download} />
     </Route>
   </Router>
