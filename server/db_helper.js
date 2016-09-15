@@ -76,5 +76,8 @@ ex.findByRuc = function(query, success) {
 
 ex.findByName = function(query, success) {
     simpleQuery('name', query, success);
-}
+};
 
+ex.findByName(process.argv[2], function(data) {
+    console.log(data);
+})

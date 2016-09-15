@@ -1,1 +1,3 @@
 /temp/*
+/server/node_modules/
+/server/temp/

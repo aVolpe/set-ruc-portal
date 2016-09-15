@@ -49,7 +49,7 @@ class Search extends Component {
                 onChange={this.changeCurrentRuc} />
             </label>
             <div className="result-container">
-              <table className="pure-table">
+              <table className="pure-table pure-table-horizontal">
                 <thead>
                     <tr>
                         <th>Doc</th>
