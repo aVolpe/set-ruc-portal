@@ -20,9 +20,15 @@ router.get('/find', function(req, res) {
   if (!req.query.query) 
     res.json({ message : 'Invalid query'});
   else
-    dbHelper.findByRuc(req.query.query, function(data) {
-      res.json(data);
-    });
+    if (!isNaN(req.query.query))
+      dbHelper.findByRuc(req.query.query, function(data) {
+        res.json(data);
+      });
+    else
+      dbHelper.findByName(req.query.query, function(data) {
+        res.json(data);
+      });
+      
 });
 
 router.get('/all.:tipo', function(req, res) {

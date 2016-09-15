@@ -85,3 +85,17 @@ body {
         font-size: 128%;
     }
 }
+
+#menu .pure-menu ul,
+#menu .pure-menu .menu-item-divided {
+    border-top: 1px solid #333;
+}
+
+
+@media (min-width: 48em) {
+    .bottom-menu {
+        position:absolute;
+        bottom: 0;
+        width : 100%;
+    }
+}

@@ -27,7 +27,13 @@ class Search extends Component {
      this.doFetch(newRuc);
   }
   
-  state = this.getValues(Config.EXAMPLE_RUC);
+  getRandomOption = () => {
+    
+    let initialOptions = [ Config.EXAMPLE_RUC, 'ASISMED', 'SANTA CLARA'];
+    return initialOptions[Math.floor(Math.random()*initialOptions.length)];
+  }
+  
+  state = this.getValues(this.getRandomOption());
   tes = this.doFetch(this.state.ruc);
   
   
@@ -40,10 +46,10 @@ class Search extends Component {
         </div>
         <form className="pure-form">
           <p>
-            <label>Ingrese un RUC (o una parte) para buscar:
+            <label>Ingrese un nombre o un RUC para buscar
               <input 
                 className="ruc-input"
-                placeholder={"1123456, 01-2140"} 
+                placeholder={"1123456, ASISMED"} 
                 type="text" 
                 value={this.state.ruc}
                 onChange={this.changeCurrentRuc} />
@@ -52,7 +58,7 @@ class Search extends Component {
               <table className="pure-table pure-table-horizontal">
                 <thead>
                     <tr>
-                        <th>Doc</th>
+                        <th>Documento</th>
                         <th>Nombre</th>
                         <th>Digito</th>
                     </tr>
@@ -69,6 +75,11 @@ class Search extends Component {
                 </tbody>
               </table>
             </div>
+            <p>Puedes buscar por nombre (si es persona fisica primero pon el apellido) o por
+            numero de RUC (sin digito verificador)</p>
+            <p> Se limita el resultado a 10 elementos, ingresa mas para 
+              mejorar los resultados.
+            </p>
           </p>
         </form>
       </div>
