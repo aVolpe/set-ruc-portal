@@ -54,32 +54,32 @@ class Search extends Component {
                 value={this.state.ruc}
                 onChange={this.changeCurrentRuc} />
             </label>
-            <div className="result-container">
-              <table className="pure-table pure-table-horizontal">
-                <thead>
-                    <tr>
-                        <th>Documento</th>
-                        <th>Nombre</th>
-                        <th>Digito</th>
-                    </tr>
-                </thead>
-                <tbody className="results-body">
-                  {this.state.result.map((i) => {
-                    return (
-                      <tr key={i.doc}>
-                        <th>{i.doc}</th>
-                        <th>{i.name}</th>
-                        <th>{i.div}</th>
-                      </tr>);
-                  })}
-                </tbody>
-              </table>
-            </div>
-            <p>Puedes buscar por nombre (si es persona fisica primero pon el apellido) o por
-            numero de RUC (sin digito verificador)</p>
-            <p> Se limita el resultado a 10 elementos, ingresa mas para 
-              mejorar los resultados.
-            </p>
+          </p>
+          <div className="result-container">
+            <table className="pure-table pure-table-horizontal">
+              <thead>
+                  <tr>
+                      <th>Documento</th>
+                      <th>Nombre</th>
+                      <th>Digito</th>
+                  </tr>
+              </thead>
+              <tbody className="results-body">
+                {this.state.result.map((i) => {
+                  return (
+                    <tr key={i.doc}>
+                      <th>{i.doc}</th>
+                      <th>{i.name}</th>
+                      <th>{i.div}</th>
+                    </tr>);
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p>Puedes buscar por nombre (si es persona fisica primero pon el apellido) o por
+          numero de RUC (sin digito verificador)</p>
+          <p> Se limita el resultado a 10 elementos, ingresa mas para 
+            mejorar los resultados.
           </p>
         </form>
       </div>
