@@ -7,7 +7,14 @@ Los datos se obtienen de la SET, se debe ejecutar el submódulo set-customers
 y luego ejecutar:
 
 ```bash
-sqlite3 server/temp/db.db
+# Creamos el directorio donde almacenaremos todo
+cd server
+mkdir temp 
+node download_builder.js csv
+node download_builder.js pdf
+
+# Insertamos en un SQlite
+sqlite3 temp/db.db
 ```
 
 Y luego:
@@ -15,8 +22,10 @@ Y luego:
 ```SQL
 CREATE TABLE rucs (doc TEXT, name TEXT, div TEXT, old TEXT);
 .separator '|'
-.import  ./set-customers/result.txt  rucs
+.import  ./temp/data.csv rucs
 ```
+
+Listo!, no deben salir errores.
 
 El archivo `db_helper.js` tiene una manera de crear la db desde
 javascript, pero no es muy eficiente

@@ -1,8 +1,8 @@
 var config = {
-  origin : 'set-customers/result.txt',
+  origin : '../set-customers/result.txt',
   // origin : 'temp/t1.txt',
   csv_dest : 'temp/data.csv',
-  json_file : 'temp/data.json',
+  json_dest : 'temp/data.json',
 };
 
 function doWork(origin, output, process) {
@@ -10,15 +10,15 @@ function doWork(origin, output, process) {
     var lineReader = require('readline').createInterface({
         input: fs.createReadStream(origin)
     });
-    
+
     var stream = fs.createWriteStream(output);
     stream.once('open', function(fd) {
-        
-        
+
+
         lineReader.on('line', function(line) {
             process(stream, line);
         });
-        
+
         lineReader.on('pause', function(endCallback) {
             stream.end();
         });
@@ -26,9 +26,9 @@ function doWork(origin, output, process) {
 }
 
 function transformCsv() {
-    
+
     function fixKnowBugs(line) {
-        
+
         var finalLine = line.substr(0, line.lastIndexOf('|'));
         if (finalLine.indexOf('"') > 0)
             finalLine = finalLine.replace('"', '');
@@ -38,7 +38,7 @@ function transformCsv() {
             finalLine = finalLine.replace('N| 211', 'N 211');
         if (finalLine.indexOf('M|LLER') > 0)
             finalLine = finalLine.replace('M|LLER', 'MULLER');
-            
+
         return finalLine;
     }
     var first = true;
@@ -53,7 +53,7 @@ function transformCsv() {
 }
 
 function transformJson() {
-    doWork(config.csv_dest, config.json_file, function(stream, line) {
+    return doWork(config.csv_dest, config.json_dest, function(stream, line) {
         if (!line) return;
         var parts = line.split('|');
         stream.write(JSON.stringify({
@@ -65,5 +65,8 @@ function transformJson() {
     });
 }
 
-transformCsv();
-transformJson();
+if (process.argv[2] === 'csv')
+  transformCsv();
+if (process.argv[2] === 'json')
+  transformJson();
+
