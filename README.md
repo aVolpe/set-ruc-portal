@@ -62,3 +62,11 @@ cd client
 npm install
 npm start
 ```
+
+### Docker
+
+Una vez construidas el servidor y el cliente, se puede ejecutar Docker:
+
+```bash
+docker-compose up -d
+```
