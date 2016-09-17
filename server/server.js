@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
 });
 
 router.get('/find', function(req, res) {
-  if (!req.query.query) 
+  if (!req.query.query)
     res.json({ message : 'Invalid query'});
   else
     if (!isNaN(req.query.query))
@@ -28,7 +28,7 @@ router.get('/find', function(req, res) {
       dbHelper.findByName(req.query.query, function(data) {
         res.json(data);
       });
-      
+
 });
 
 router.get('/all.:tipo', function(req, res) {
@@ -46,7 +46,7 @@ router.get('/all.:tipo', function(req, res) {
   }
 });
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+server.listen(process.env.PORT || 2001, process.env.IP || "0.0.0.0", function(){
   var addr = server.address();
   console.log("Server listening at ", addr.address + ":" + addr.port);
 });

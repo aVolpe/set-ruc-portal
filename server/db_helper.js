@@ -1,13 +1,13 @@
 var ex = module.exports = {};
 
 var data = ex.data = {
-    dbName : 'temp/db.db',
+    dbName : process.env.DB_PATH || 'temp/db.db',
     tableName : 'rucs',
     maxResults : 10
 };
 
 ex.init = function() {
-    
+
     data.sqlite = require('sqlite3');
     data.db = new data.sqlite.Database(data.dbName);
     data.loaded = true;
@@ -19,7 +19,7 @@ ex.init = function() {
  */
 ex.hasData = function(callback) {
     if (!data.loaded) ex.init();
-    
+
     data.db.get('SELECT * FROM ' + data.tableName + ' LIMIT 1',
         function (err, count) {
             if (err) callback(false);
@@ -34,9 +34,9 @@ ex.hasData = function(callback) {
 ex.loadDataFromSet = function(success) {
     if (!data.loaded) ex.init();
     var db = data.db;
-    
+
     var set_parser = require('./set_parser.js');
-    
+
     db.run('CREATE TABLE ' + data.tableName + ' (doc TEXT, name TEXT, div TEXT, old TEXT)', [],  function() {
       var stmt = db.prepare('INSERT INTO ' + data.tableName + ' VALUES ($doc, $name, $div, $old)');
       var i = 0;
@@ -49,15 +49,15 @@ ex.loadDataFromSet = function(success) {
     });
 };
 
-/** 
+/**
  * Perfom a simple LIKE operation over a simple property
  */
 function simpleQuery(property, filter, success) {
-    
+
     if (!data.loaded) ex.init();
-    
-    data.db.all('SELECT * FROM ' + data.tableName + ' WHERE ' + property + ' LIKE $doc LIMIT $size', 
-        { 
+
+    data.db.all('SELECT * FROM ' + data.tableName + ' WHERE ' + property + ' LIKE $doc LIMIT $size',
+        {
             $doc : '%' + filter + '%',
             $size : data.maxResults
         },
