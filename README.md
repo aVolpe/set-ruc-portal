@@ -11,7 +11,7 @@ y luego ejecutar:
 cd server
 mkdir temp 
 node download_builder.js csv
-node download_builder.js pdf
+node download_builder.js json
 
 # Insertamos en un SQlite
 sqlite3 temp/db.db
@@ -29,13 +29,6 @@ Listo!, no deben salir errores.
 
 El archivo `db_helper.js` tiene una manera de crear la db desde
 javascript, pero no es muy eficiente
-
-Una vez finalizada la creación de la db, se debe generar
-los archivos para descargar, lo que se realiza ejecutando:
-
-```
-node download_builder.js
-```
 
 Luego ya puede iniciarse el servidor.
 
