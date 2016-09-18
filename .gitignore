@@ -1,3 +1,4 @@
 /temp/*
 /server/node_modules/
 /server/temp/
+/server/src/temp/

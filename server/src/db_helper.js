@@ -1,7 +1,7 @@
 var ex = module.exports = {};
 
 var data = ex.data = {
-    dbName : process.env.DB_PATH || 'temp/db.db',
+    dbName : process.env.DB_PATH || 'src/temp/db.db',
     tableName : 'rucs',
     maxResults : 10
 };

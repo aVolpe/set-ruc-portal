@@ -1,14 +1,10 @@
 server:
-  image: node:5-wheezy
-  volumes:
-   - ./server/:/app/
+  build: server
   ports:
    - "8082:8080"
   environment:
    - NODE_ENV=production
    - PORT=8080
-   - DB_PATH=/app/temp/db.db
-  command: node /app/server.js
 
 
 client:
