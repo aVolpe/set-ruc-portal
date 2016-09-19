@@ -4,11 +4,10 @@ import './App.css';
 
 import { Link, IndexLink } from 'react-router'
 
-class App extends Component {
+export default class App extends Component {
 
   initPure = function (window, document) {
 
-    console.log('iniciando pure');
     var layout   = document.getElementById('layout'),
         menu     = document.getElementById('menu'),
         menuLink = document.getElementById('menuLink');
@@ -85,5 +84,3 @@ class App extends Component {
   }
 
 }
-
-export default App;

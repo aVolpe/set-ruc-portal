@@ -6,6 +6,8 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router'
 import Validator from './validator/Validator'
 import Search from './search/Search'
 import Download from './download/Download'
+import License from './License'
+import About from './About'
 
 
 ReactDOM.render(
@@ -15,6 +17,8 @@ ReactDOM.render(
       <IndexRoute component={Search} />
       <Route path="validate" component={Validator} />
       <Route path="download" component={Download} />
+      <Route path="about" component={About} />
+      <Route path="license" component={License} />
     </Route>
   </Router>
   ),
