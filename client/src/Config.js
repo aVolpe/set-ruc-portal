@@ -1,4 +1,4 @@
-var baseUrl = 'http://localhost:8082/';
+var baseUrl = 'http://www.volpe.com.py:6081/';
 
 module.exports = {
     URL: baseUrl,
