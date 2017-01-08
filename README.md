@@ -7,7 +7,7 @@ http://set.volpe.com.py/
 ## Obtener datos
 
 Los datos se obtienen de la SET, se debe ejecutar el submódulo set-customers
-(ver [https://github.com/aVolpe/set-customers/blob/master/README.md](README.md))
+(ver [README.md](https://github.com/aVolpe/set-customers/blob/master/README.md))
 y luego ejecutar:
 
 ```bash
@@ -17,7 +17,7 @@ mkdir temp
 node download_builder.js csv
 node download_builder.js json
 
-# Insertamos en un SQlite
+# Ingresamos a una consola interactiva SQlite3 para insertar los datos
 sqlite3 temp/db.db
 ```
 
