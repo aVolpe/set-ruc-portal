@@ -85,11 +85,8 @@ class Search extends Component {
           <div className="result-container">
             {body}
           </div>
-          <p>Puedes buscar por nombre (si es persona fisica primero pon el apellido) o por
-          numero de RUC (sin digito verificador)</p>
-          <p> Se limita el resultado a 10 elementos, ingresa mas para
-            mejorar los resultados.
-          </p>
+          <p>Puedes buscar por nombre (si es persona fisica primero pon el apellido) o por numero de <b>RUC</b> (sin digito verificador)</p>
+          <p>Se limita el resultado a 10 elementos, ingresa más para mejorar los resultados. </p>
         </form>
       </div>
     );
