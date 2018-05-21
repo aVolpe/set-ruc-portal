@@ -54,14 +54,14 @@ export default class App extends Component {
         </a>
         <div id="menu">
           <div className="pure-menu">
-              <span className="pure-menu-heading">Opciones</span>
+              <span className="pure-menu-heading"></span>
 
               <ul className="pure-menu-list">
                   <li className="pure-menu-item"><IndexLink activeClassName="pure-menu-selected" className="pure-menu-link" to="/">Buscador</IndexLink></li>
                   <li className="pure-menu-item"><Link activeClassName="pure-menu-selected" className="pure-menu-link" to="validate">Validador</Link></li>
                   <li className="pure-menu-item"><Link activeClassName="pure-menu-selected" className="pure-menu-link" to="download">Descargar</Link></li>
               </ul>
-              
+
               <div className="bottom-menu">
                 <ul className="pure-menu-list">
                   <li className="pure-menu-item menu-item-divided"><Link activeClassName="pure-menu-selected" className="pure-menu-link" to="about">Acerca de</Link></li>
