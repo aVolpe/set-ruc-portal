@@ -22,7 +22,7 @@ export default class DigitGenerator {
         var resto = total % base;
         
         if (resto > 1) return base - resto;
-        else return resto;
+        else return 0;
     }
 
     invertirCadena = (cadena) => {

@@ -1,4 +1,4 @@
-var baseUrl = 'http://www.volpe.com.py:6081/';
+var baseUrl = 'https://sapi.volpe.com.py/';
 
 module.exports = {
     URL: baseUrl,

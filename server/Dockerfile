@@ -13,4 +13,6 @@ ADD src src/
 
 RUN ls -l /app/src
 
+EXPOSE 80
+
 CMD ["node", "src/server.js"]

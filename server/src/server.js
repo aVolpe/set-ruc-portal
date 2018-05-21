@@ -8,8 +8,8 @@ var server = http.createServer(router);
 router.use(cors());
 
 var config = {
-  csv_file : 'temp/data.csv',
-  json_file : 'temp/data.json'
+  csv_file : 'src/temp/data.csv',
+  json_file : 'src/temp/data.json'
 }
 
 router.get('/find', function(req, res) {
