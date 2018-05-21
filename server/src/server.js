@@ -12,14 +12,10 @@ var config = {
   json_file : 'temp/data.json'
 }
 
-router.get('/', function(req, res) {
-  res.send('Hello world');
-});
-
 router.get('/find', function(req, res) {
   if (!req.query.query)
     res.json({ message : 'Invalid query'});
-  else
+  else {
     if (!isNaN(req.query.query))
       dbHelper.findByRuc(req.query.query, function(data) {
         res.json(data);
@@ -28,6 +24,7 @@ router.get('/find', function(req, res) {
       dbHelper.findByName(req.query.query, function(data) {
         res.json(data);
       });
+  }
 
 });
 

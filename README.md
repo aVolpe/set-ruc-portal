@@ -14,19 +14,11 @@ y luego ejecutar:
 # Creamos el directorio donde almacenaremos todo
 cd server
 mkdir temp 
-node download_builder.js csv
-node download_builder.js json
+node src/download_builder.js csv
+node src/download_builder.js json
 
-# Ingresamos a una consola interactiva SQlite3 para insertar los datos
-sqlite3 temp/db.db
-```
-
-Y luego:
-
-```SQL
-CREATE TABLE rucs (doc TEXT, name TEXT, div TEXT, old TEXT);
-.separator '|'
-.import  ./temp/data.csv rucs
+# Creamos la base de datos
+sqlite3 temp/db.db < import_data.sql
 ```
 
 Listo!, no deben salir errores.
