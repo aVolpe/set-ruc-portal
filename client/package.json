@@ -1,7 +1,8 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
+  "name": "set-ruc-client",
+  "version": "0.1.1",
+  "private": false,
+  "license": "MIT",
   "devDependencies": {
     "react-scripts": "0.4.1"
   },

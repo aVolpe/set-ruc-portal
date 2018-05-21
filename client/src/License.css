@@ -1,7 +1,4 @@
-a:link    {color:gray; background-color:transparent; text-decoration:none}
-a:visited {color:gray; background-color:transparent; text-decoration:none}
-a:hover   {color:gray; background-color:transparent; text-decoration:underline}
-a:active  {color:gray; background-color:transparent; text-decoration:underline}
+a {color:gray;}
 
 
 .credit {
