@@ -12,10 +12,9 @@ y luego ejecutar:
 
 ```bash
 # Creamos el directorio donde almacenaremos todo
-cd server
-mkdir temp 
-node src/download_builder.js csv
-node src/download_builder.js json
+mkdir -p ./server/temp 
+node ./server/src/utils/download_builder.js csv
+node ./server/src/utils/download_builder.js json
 
 # Creamos la base de datos
 sqlite3 temp/db.db < import_data.sql
@@ -23,7 +22,7 @@ sqlite3 temp/db.db < import_data.sql
 
 Listo!, no deben salir errores.
 
-El archivo `db_helper.js` tiene una manera de crear la db desde
+El archivo `DBHelper.ts` tiene una manera de crear la db desde
 javascript, pero no es muy eficiente
 
 Luego ya puede iniciarse el servidor.

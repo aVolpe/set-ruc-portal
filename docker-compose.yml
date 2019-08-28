@@ -1,10 +1,12 @@
 server:
   build: server
   ports:
-   - "8082:8080"
+   - "8082:8082"
   environment:
    - NODE_ENV=production
-   - PORT=8080
+   - PORT=8082
+  volumes:
+   - ./server/temp/:/app/temp
 
 
 client:

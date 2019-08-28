@@ -1,8 +1,8 @@
 var config = {
-  origin : '../set-customers/result.txt',
+  origin : './set-customers/result.txt',
   // origin : 'temp/t1.txt',
-  csv_dest : 'temp/data.csv',
-  json_dest : 'temp/data.json',
+  csv_dest : './server/temp/data.csv',
+  json_dest : './server/temp/data.json',
 };
 
 function doWork(origin, output, process) {
