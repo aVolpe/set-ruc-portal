@@ -30,7 +30,7 @@ class Search extends Component {
 
   getRandomOption = () => {
 
-    let initialOptions = [ Config.EXAMPLE_RUC, 'ASISMED', 'SANTA CLARA'];
+    let initialOptions = [ Config.EXAMPLE_RUC, 'ASISMED', '"SANTA CLARA"'];
     return initialOptions[Math.floor(Math.random()*initialOptions.length)];
   }
 

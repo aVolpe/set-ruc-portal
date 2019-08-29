@@ -60,8 +60,7 @@ exports.DBHelper = class {
 
     const db = await this.getDB();
 
-    const names = query.split(/\s+/)
-      .filter(q => !!q && !!q.trim());
+    const names = query.match(/(?:[^\s"]+|"[^"]*")+/g);
 
     const finalNames = names.filter(n => n && n.trim())
       .map(n => n.toLocaleLowerCase());
@@ -78,7 +77,7 @@ exports.DBHelper = class {
     const sql = `SELECT *
                     FROM rucs
                     WHERE ${parts.join(" AND ")}
-                    ORDER BY doc ASC 
+                    ORDER BY doc ASC
                     LIMIT $size`;
 
     return new Promise((res, rej) => {
