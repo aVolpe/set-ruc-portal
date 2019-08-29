@@ -71,8 +71,9 @@ exports.DBHelper = class {
       $size: this.maxResults
     };
     finalNames.map((name, i) => {
-      params[`$param${i}`] = `%${name}%`
+      params[`$param${i}`] = `%${name}%`.replace(/"/g, '');
     });
+
 
     const sql = `SELECT *
                     FROM rucs
