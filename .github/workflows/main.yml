@@ -30,3 +30,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: avolpe/set-ruc-finder
         tags: latest
+        path: client
