@@ -31,3 +31,8 @@ jobs:
         repository: avolpe/set-ruc-finder
         tags: latest
         path: client
+    - name: Webhook
+      uses: joelwmale/webhook-action@master
+      env:
+        WEBHOOK_URL: ${{ secrets.HOOK_CLIENT }}
+        data: "From github"
