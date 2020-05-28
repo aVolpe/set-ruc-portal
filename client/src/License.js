@@ -19,7 +19,7 @@ class Credit extends Component {
                 <h3><a href="{this.projectLink}" target="_blank">{this.name}</a></h3>
                 <ul>
                     <li><b>Copyright</b>: {this.holder}</li>
-                    <li><b>Licencia</b>: ({this.type}): <a href="{this.link}" target="_blank">{this.shortLink}</a></li>
+                    <li><b>Licencia</b>: ({this.type}): <a href="{this.link}" target="_blank" rel="noopener noreferrer">{this.shortLink}</a></li>
                 </ul>
             </div>
         )
@@ -76,9 +76,9 @@ export default class License extends Component {
                     link="https://github.com/reactjs/react-tabs/blob/master/LICENSE"> </Credit>
 
                 <div>
-                    <p>La licencia de este proyecto es <a target="_blank" href="https://github.com/aVolpe/set-ruc-finder/blob/master/LICENSE">MIT</a>,
+                    <p>La licencia de este proyecto es <a rel="noopener noreferrer" target="_blank" href="https://github.com/aVolpe/set-ruc-finder/blob/master/LICENSE">MIT</a>,
                     los datos proveídos por la SET no tienen licencia y pueden encontrarse
-          <a target="_blank" href="http://www.set.gov.py/portal/PARAGUAY-SET/InformesPeriodicos?folder-id=repository:collaboration:/sites/PARAGUAY-SET/categories/SET/Informes%20Periodicos/listado-de-ruc-con-sus-equivalencias"> aquí</a>
+          <a rel="noopener noreferrer" target="_blank" href="http://www.set.gov.py/portal/PARAGUAY-SET/InformesPeriodicos?folder-id=repository:collaboration:/sites/PARAGUAY-SET/categories/SET/Informes%20Periodicos/listado-de-ruc-con-sus-equivalencias"> aquí</a>
                     </p>
                 </div>
             </div>

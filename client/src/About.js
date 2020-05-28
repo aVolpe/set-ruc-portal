@@ -11,7 +11,7 @@ export default class About extends Component {
         </div>
         <div className="credit">
           <ol>
-            <li>Probar si es realmente factible utilizar un IDE online, en este caso <a href="https://c9.io/" target="_blank">Cloud 9</a></li>
+            <li>Probar si es realmente factible utilizar un IDE online, en este caso <a href="https://c9.io/" target="_blank" rel="noopener noreferrer">Cloud 9</a></li>
             <li>Aprender lo básico de React</li>
             <li>Aprender lo básico de node.js</li>
 

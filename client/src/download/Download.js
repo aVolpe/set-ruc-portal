@@ -12,8 +12,8 @@ class Download extends Component {
                     <h2>Obten los datos en formatos accesibles y procesables por una maquina</h2>
                 </div>
                 <p>
-                    <a className="first-button" href={Config.JSON_FILE} target="_blank"> JSON </a>
-                    <a className="" href={Config.CSV_FILE} target="_blank"> CSV (separado por |) </a>
+                    <a className="first-button" href={Config.JSON_FILE} target="_blank" rel="noopener noreferrer"> JSON </a>
+                    <a className="" href={Config.CSV_FILE} target="_blank" rel="noopener noreferrer"> CSV (separado por |) </a>
                 </p>
             </div>
         );
