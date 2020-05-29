@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Search.css';
 import { Config } from '../Config';
 import { useQueryParam, StringParam, withDefault } from 'use-query-params';
@@ -25,11 +25,11 @@ export function Search() {
                 setData(response);
                 setWorking(false);
             });
-    }, 200, false);
+    }, 500, false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         doFetch(ruc);
-    }, [ruc])
+    }, [ruc, doFetch])
 
 
 
@@ -45,9 +45,8 @@ export function Search() {
         body = (<table className="pure-table pure-table-horizontal pure-table-striped">
             <thead>
                 <tr>
-                    <th>Documento</th>
+                    <th style={{textAlign: 'right'}}>RUC</th>
                     <th>Nombre</th>
-                    <th>Digito</th>
                 </tr>
             </thead>
             <tbody className="results-body">
@@ -55,9 +54,8 @@ export function Search() {
                 {data.map((i) => {
                     return (
                         <tr key={i.doc}>
-                            <td>{i.doc}</td>
+                            <td style={{textAlign: 'right'}}>{i.doc}-{i.div}</td>
                             <td>{i.name}</td>
-                            <td>{i.div}</td>
                         </tr>);
                 })}
             </tbody>
@@ -86,7 +84,6 @@ export function Search() {
                     {body}
                 </div>
                 <p>Puedes buscar por nombre (si es persona fisica primero pon el apellido) o por numero de <b>RUC</b> (sin digito verificador)</p>
-                <p>Se limita el resultado a 10 elementos, ingresa más para mejorar los resultados. </p>
             </form>
         </div>
     );
