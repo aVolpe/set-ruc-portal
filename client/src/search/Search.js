@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import './Search.css';
 import { Config } from '../Config';
+import { useQueryParam, StringParam, withDefault } from 'use-query-params';
+import { useDebounceCallback} from '@react-hook/debounce'
+
+const DEF_SEARCH = getRandomOption();
 
 export function Search() {
 
-    const [ruc, setRuc] = useState(getRandomOption());
+    const [ruc, setRuc] = useQueryParam('ruc', withDefault(StringParam, DEF_SEARCH));
     const [data, setData] = useState([]);
     const [working, setWorking] = useState(true);
 
-    const doFetch = (ruc) => {
+    const doFetch = useDebounceCallback((ruc) => {
         if (!ruc || ruc.length < 3) {
+            setData([]);
+            setWorking(false);
             return;
         }
         setWorking(true);
@@ -19,7 +25,7 @@ export function Search() {
                 setData(response);
                 setWorking(false);
             });
-    }
+    }, 200, false);
 
     React.useEffect(() => {
         doFetch(ruc);
@@ -30,13 +36,7 @@ export function Search() {
     const changeCurrentRuc = (evt) => {
         let newRuc = evt.target.value;
         setRuc(newRuc);
-
     }
-
-
-
-
-
 
     let body = '';
     if (working) {
@@ -51,7 +51,7 @@ export function Search() {
                 </tr>
             </thead>
             <tbody className="results-body">
-                {data.length === 0 && <td colspan={3}><p>No hay resultados que coincidan con la búsqueda</p></td>}
+                {data.length === 0 && <tr><td colSpan={3}><p>No hay resultados que coincidan con la búsqueda</p></td></tr>}
                 {data.map((i) => {
                     return (
                         <tr key={i.doc}>
