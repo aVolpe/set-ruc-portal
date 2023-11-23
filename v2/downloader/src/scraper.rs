@@ -5,19 +5,18 @@ use chrono::{DateTime, Utc};
 use std::io::Write;
 use url::Url;
 
-#[derive(Debug)]
-pub struct NameLinkPair {
+#[derive(Debug, Clone)]
+pub struct ScrappedInfo {
     pub name: String,
     pub link: String,
 }
 
 const BASE_URL: &str = "https://www.set.gov.py/web/portal-institucional/listado-de-ruc-con-sus-equivalencias";
 
-pub async fn download_links() -> Result<Vec<NameLinkPair>, Box<dyn std::error::Error>> {
+pub async fn download_links() -> Result<Vec<ScrappedInfo>, Box<dyn std::error::Error>> {
 
     let page = download_page().await;
     // Parse the HTML document
-     //println!("page {}", page?.as_str());
     let document = Document::from(page?.as_str());
 
     let mut to_ret = Vec::new();
@@ -41,7 +40,7 @@ pub async fn download_links() -> Result<Vec<NameLinkPair>, Box<dyn std::error::E
             .attr("href")
             .unwrap();
 
-        to_ret.push(NameLinkPair { 
+        to_ret.push(ScrappedInfo { 
             name: title, 
             link: make_absolute_url(BASE_URL, link)
         });
@@ -84,7 +83,6 @@ async fn download_page() -> Result<String, Box<dyn std::error::Error>> {
     let body = response
         .text()
         .await?;
-    println!("text: {}", body);
     println!("Writing file to local cache {}", local_path);
     let mut file = fs::File::create(&local_path)?;
     file.write_all(body.as_bytes())?;
