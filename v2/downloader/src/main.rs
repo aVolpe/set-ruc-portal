@@ -1,42 +1,61 @@
 mod scraper;
 mod downloader;
+mod joiner;
 
 use std::{fs,process};
 use crate::scraper::download_links;
 use crate::downloader::download_list;
+use crate::joiner::unzip_and_concatenate;
 
 const LOCAL_FOLDER: &str = "./.downloaded_files";
+const OUTPUT_FILE_PATH: &str = "./output/full_data.tsv";
 
 #[tokio::main]
 async fn main() {
     println!("Preparing folders");
-    ensure_folder_exists(LOCAL_FOLDER)
+    let folders = vec![LOCAL_FOLDER, "./output"];
+    ensure_folder_exists(&folders)
         .unwrap();
 
-    println!("Folders ready, fetching page");
+    println!("Folders '{:?}' ready, fetching page", folders);
 
-    let download_result = download_links().await;
-    if download_result.is_err() {
-        let err = download_result.err().unwrap();
-        eprintln!("Error downloading links: {}", err);
-        process::exit(1);
+    let links = match download_links().await {
+        Ok(list) => list,
+        Err(err) => { 
+            eprintln!("Error fetching links: {:?}", err); 
+            process::exit(1);
+        }
     };
-    let links = download_result.unwrap();
 
     for link in links.iter() {
         println!("Name: {}, Link: {}", link.name, link.link);
     }
 
-    let downloaded_files = download_list(LOCAL_FOLDER, &links)
-        .await
-        .unwrap();
+
+    let downloaded_files = match download_list(LOCAL_FOLDER, &links).await {
+        Ok(list) => list,
+        Err(err) => { 
+            eprintln!("Error downloading files: {:?}", err); 
+            process::exit(1);
+        }
+    };
 
     for downloaded_file in downloaded_files {
         println!("Downloaded: {}", downloaded_file);
     }
+
+    match unzip_and_concatenate(LOCAL_FOLDER, OUTPUT_FILE_PATH) {
+        Ok(()) => println!("Files successfully concatenated to: {}", OUTPUT_FILE_PATH),
+        Err(err) => { 
+            eprintln!("Error unzipping files: {:?}", err); 
+            process::exit(1);
+        }
+    }
 }
 
-fn ensure_folder_exists(folder_path: &str) -> Result<(), std::io::Error> {
-    fs::create_dir_all(folder_path)?;
+fn ensure_folder_exists(folder_path: &Vec<&str>) -> Result<(), std::io::Error> {
+    for dir in folder_path {
+        fs::create_dir_all(dir)?;
+    }
     Ok(())
 }
