@@ -1,0 +1,109 @@
+extern crate rusqlite;
+extern crate serde;
+
+use rusqlite::{params, Connection, Result, params_from_iter};
+use serde::Serialize;
+
+#[derive(Debug, Serialize)]
+pub struct Data {
+    ruc: String,
+    nombre: String,
+    dv: String,
+    old: String,
+    estado: String,
+}
+
+fn handle_string_case(
+    query: String,
+    per_page: usize,
+    offset: usize,
+    conn: &Connection,
+) -> Result<Vec<Data>, rusqlite::Error> {
+    let binding = query.to_uppercase();
+    let words = binding.split_whitespace();
+
+    let mut parameters = Vec::new();
+    let mut sql = String::from("SELECT * FROM rucs WHERE ");
+    for (i, word) in words.enumerate() {
+        if i != 0 {
+            sql.push_str(" AND ");
+        }
+        sql.push_str(&format!("name LIKE ?{}", i + 1));
+        parameters.push(format!("%{}%", word));
+    }
+    
+    sql.push_str("ORDER BY ruc ASC");
+
+    sql.push_str(&format!(
+        " LIMIT ?{} OFFSET ?{}",
+        parameters.len() + 1,
+        parameters.len() + 2
+    ));
+
+    parameters.push(per_page.to_string());
+    parameters.push(offset.to_string());
+    println!("sql: {}, params: {}", sql, parameters.join(", "));
+
+    let mut stmt = conn.prepare(&sql)?;
+    
+    let data_iter = stmt.query_map(params_from_iter(parameters), map)?;
+
+    let mut data = Vec::new();
+    for data_result in data_iter {
+        data.push(data_result.unwrap());
+    }
+
+    Ok(data)
+}
+
+fn handle_number_case(
+    query: String,
+    per_page: usize,
+    offset: usize,
+    conn: &Connection,
+) -> Result<Vec<Data>, rusqlite::Error> {
+    let sql = "SELECT * FROM rucs WHERE ruc LIKE ?1 LIMIT ?2 OFFSET ?3";
+    let mut stmt = conn.prepare(sql)?;
+
+    let params = params![format!("%{}%", query), per_page, offset];
+
+    println!("Query: {}, params: query={}, per_page={}, offset={}", sql, format!("%{}%", query), per_page.to_string(), offset.to_string());
+    let data_iter = stmt.query_map(
+        params, 
+        map
+    ).unwrap();
+
+    let mut data = Vec::new();
+    for data_result in data_iter {
+        data.push(data_result.unwrap());
+    }
+
+    Ok(data)
+
+}
+
+fn map(row: &rusqlite::Row) -> Result<Data, rusqlite::Error> {
+    Ok(Data {
+        ruc: row.get(0)?,
+        nombre: row.get(1)?,
+        dv: row.get(2)?,
+        old: row.get(3)?,
+        estado: row.get(4)?,
+    })
+}
+
+pub fn get_data_from_db(
+    query: String,
+    per_page: usize,
+    offset: usize,
+) -> Result<Vec<Data>, rusqlite::Error> {
+    let conn = Connection::open("/Users/arturovolpe/develop/avolpe/set-ruc-portal/v2/downloader/output/db.db")?;
+
+    if query.chars().all(char::is_numeric) {
+        println!("Querying as number");
+        handle_number_case(query, per_page, offset, &conn)
+    } else {
+        println!("Querying as name");
+        handle_string_case(query, per_page, offset, &conn)
+    }
+}
