@@ -8,7 +8,8 @@ use crate::downloader::download_list;
 use crate::joiner::unzip_and_concatenate;
 
 const LOCAL_FOLDER: &str = "./.downloaded_files";
-const OUTPUT_FILE_PATH: &str = "./output/full_data.tsv";
+const OUTPUT_FILE_PATH: &str = "./output/data.csv";
+const OUTPUT_FILE_PATH_JSON: &str = "./output/data.json";
 
 #[tokio::main]
 async fn main() {
@@ -44,7 +45,7 @@ async fn main() {
         println!("Downloaded: {}", downloaded_file);
     }
 
-    match unzip_and_concatenate(LOCAL_FOLDER, OUTPUT_FILE_PATH) {
+    match unzip_and_concatenate(LOCAL_FOLDER, OUTPUT_FILE_PATH, OUTPUT_FILE_PATH_JSON) {
         Ok(()) => println!("Files successfully concatenated to: {}", OUTPUT_FILE_PATH),
         Err(err) => { 
             eprintln!("Error unzipping files: {:?}", err); 
