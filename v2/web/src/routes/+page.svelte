@@ -1,6 +1,7 @@
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
     import { onMount } from "svelte";
+    import CopyToClipboard from "../components/CopyToClipboard.svelte";
 
     type RUCResult = {
         ruc: string;
@@ -8,6 +9,7 @@
         dv: string;
     };
 
+    let inputElement;
     let searchQuery: string = "";
     let results: Array<RUCResult> = [];
     let recentSearches: Writable<RUCResult[]> = writable([]);
@@ -20,6 +22,10 @@
         // results = JSON.parse(localStorage?.getItem("recentSearches") || "[]");
         recentSearches.subscribe((value) => {
             localStorage?.setItem("recentSearches", JSON.stringify(value));
+        });
+
+        onMount(() => {
+            inputElement.focus();
         });
     });
 
@@ -74,10 +80,13 @@
 </script>
 
 <div class="p-4 flex space-y-4 flex-col">
-    <div class="flex justify-center flex-wrap space-x-2 sm:flex-row flex-col space-y-2 items-center sm:items-baseline">
+    <div
+        class="flex justify-center flex-wrap space-x-2 sm:flex-row flex-col space-y-2 items-center sm:items-baseline"
+    >
         <input
             type="text"
             bind:value={searchQuery}
+            bind:this={inputElement}
             on:keydown={(e) => e.key === "Enter" && search()}
             class="p-2 rounded-md bg-gray-600 text-gray-100"
             placeholder="4787587, ASISMED, Arturo"
@@ -101,30 +110,25 @@
         <div
             class="p-4 pr-6 rounded-md shadow text-white border-gray-300 bg-gray-700"
         >
-            <h1 class="text-left text-gray-400">Resultado de búsqueda:</h1>
+            <h1 class="text-left text-gray-400">Resultado de búsqueda</h1>
             <ul class="mt-4">
-                {#each results as result (result.ruc)}
-                    <li>
-                        <div class="flex space-x-4 justify-around">
-                            <span>
-                                {result.ruc}-{result.dv}
-                            </span>
-                            <span class="flex-grow">
-                                {result.nombre}
-                            </span>
-                            <button
-                                title="Copiar '{result.nombre}'"
-                                on:click={() => copyToClipboard(result.nombre)}
-                                class="size-2">📋</button
-                            >
-                        </div>
-                    </li>
-                {/each}
+                <div class="min-w-sm result-container">
+                    {#each results as result (result.ruc)}
+                        <span class="justify-self-end">
+                            {result.ruc}‑{result.dv}
+                        </span>
+                        <CopyToClipboard
+                            text={result.nombre}
+                            title="Copiar '{result.nombre}'"
+                        />
+                        <span class="justify-self-start">
+                            {result.nombre}
+                        </span>
+                    {/each}
+                </div>
             </ul>
         </div>
-        <div
-            class="p-4 pr-6 rounded-md shadow text-white border-gray-300"
-        >
+        <div class="p-4 pr-6 rounded-md shadow text-white border-gray-300">
             {#if results.length === 20 || currentPage !== 1}
                 <div>Página <b>{currentPage}</b></div>
                 <div class="inline-flex">
@@ -142,7 +146,7 @@
                     >
                 </div>
             {/if}
-            </div>
+        </div>
     {:else}
         <span class="text-gray-400">
             Puedes buscar por nombre (si es persona fisica primero pon el
@@ -152,26 +156,22 @@
             <div
                 class="p-4 pr-6 rounded-md shadow text-white border-gray-300 bg-gray-700"
             >
-                <h1 class="text-left text-gray-400">Búsquedas anteriores:</h1>
+                <h1 class="text-left text-gray-400">Búsquedas anteriores</h1>
                 <ul class="mt-4">
-                    {#each $recentSearches as search (search.ruc)}
-                        <li>
-                            <div class="flex space-x-4 justify-around">
-                                <span>
-                                    {search.ruc}-{search.dv}
-                                </span>
-                                <span class="flex-grow">
-                                    {search.nombre}
-                                </span>
-                                <button
-                                    title="Copiar '{search.nombre}'"
-                                    on:click={() =>
-                                        copyToClipboard(search.nombre)}
-                                    class="size-2">📋</button
-                                >
-                            </div>
-                        </li>
-                    {/each}
+                    <div class="sm:min-w-sm result-container">
+                        {#each $recentSearches as search (search.ruc)}
+                            <span class="justify-self-end">
+                                {search.ruc}‑{search.dv}
+                            </span>
+                            <CopyToClipboard
+                                text={search.nombre}
+                                title="Copiar '{search.nombre}'"
+                            />
+                            <span class="justify-self-start">
+                                {search.nombre}
+                            </span>
+                        {/each}
+                    </div>
                 </ul>
             </div>
         {/if}

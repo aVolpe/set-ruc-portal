@@ -1,0 +1,37 @@
+name: Build v2 portal
+
+on:
+  schedule:
+    - cron: '0 0 */15 * *' # This will trigger the workflow every 15 days
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Build and run the project
+      run: |
+        ./run.sh
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-image .
+
+    - name: Save Docker image
+      run: |
+        docker save my-image:latest | gzip > my-image.tar.gz
+
+    - name: Upload Docker image
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-image
+        path: ./my-image.tar.gz

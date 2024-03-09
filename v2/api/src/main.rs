@@ -4,7 +4,9 @@ extern crate rusqlite;
 mod db;
 use db::get_data_from_db;
 
-use rocket::{Rocket, serde::{Serialize, json::Json}, Build};
+use rocket::http::Method;
+use rocket::{Rocket, serde::{Serialize, json::Json}, Build, get, routes};
+use rocket_cors::AllowedOrigins;
 
 
 #[derive(Debug, Serialize)] // Add the Responder derive attribute
@@ -27,5 +29,18 @@ fn get_data(query: String, page: Option<usize>, per_page: Option<usize>) -> Json
 
 #[launch]
 fn rocket() -> Rocket<Build> {
-    rocket::build().mount("/", routes![get_data])
+    let allowed_origins = AllowedOrigins::some_exact(&["https://www.acme.com", "http://localhost:5173/"]);
+
+    // You can also deserialize this
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins,
+        allowed_methods: vec![Method::Get].into_iter().map(From::from).collect(),
+        allow_credentials: false,
+        ..Default::default()
+    }
+    .to_cors().expect("Invalid cors config");
+
+    rocket::build()
+        .attach(cors)
+        .mount("/", routes![get_data])
 }
