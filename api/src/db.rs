@@ -3,6 +3,7 @@ extern crate serde;
 
 use rusqlite::{params, Connection, Result, params_from_iter};
 use serde::Serialize;
+use std::env;
 
 #[derive(Debug, Serialize)]
 pub struct Data {
@@ -82,6 +83,18 @@ fn handle_number_case(
 
 }
 
+fn get_db_path() -> String {
+    let db_env_name = "DB_PATH";
+    return match env::var(db_env_name) {
+        Ok(val) => val,
+        Err(_) => {
+            // Fallback value if the environment variable doesn't exist
+            println!("Environment variable '{}' not found, falling back to default value.", db_env_name);
+            "db.db".to_string()
+        }
+    };
+}
+
 fn map(row: &rusqlite::Row) -> Result<Data, rusqlite::Error> {
     Ok(Data {
         ruc: row.get(0)?,
@@ -97,7 +110,7 @@ pub fn get_data_from_db(
     per_page: usize,
     offset: usize,
 ) -> Result<Vec<Data>, rusqlite::Error> {
-    let conn = Connection::open("/Users/arturovolpe/develop/avolpe/set-ruc-portal/v2/downloader/output/db.db")?;
+    let conn = Connection::open(get_db_path())?;
 
     if query.chars().all(char::is_numeric) {
         println!("Querying as number");
