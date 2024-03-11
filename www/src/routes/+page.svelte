@@ -2,6 +2,7 @@
     import { writable, type Writable } from "svelte/store";
     import { onMount } from "svelte";
     import CopyToClipboard from "../components/CopyToClipboard.svelte";
+    import { loadConfig } from "$lib/config";
 
     type RUCResult = {
         ruc: string;
@@ -9,7 +10,7 @@
         dv: string;
     };
 
-    let inputElement;
+    let inputElement: HTMLInputElement;
     let searchQuery: string = "";
     let results: Array<RUCResult> = [];
     let recentSearches: Writable<RUCResult[]> = writable([]);
@@ -54,13 +55,20 @@
 
     async function doSearch(query: string, page: number): Promise<void> {
         const finalQuery = query.trim();
+        const config = loadConfig();
         if (finalQuery === "") return;
 
         const response = await fetch(
-            `http://localhost:8000/api/data?page=${page}&per_page=20&query=${encodeURIComponent(
+            `${
+                config.apiUrl
+            }?page=${page}&per_page=20&query=${encodeURIComponent(
                 searchQuery,
             )}`,
         );
+        if (response.status !== 200) {
+            console.error("Error fetching data", response);
+            return;
+        }
         const data: RUCResult[] = await response.json();
 
         results = data;
@@ -131,20 +139,25 @@
         <div class="p-4 pr-6 rounded-md shadow text-white border-gray-300">
             {#if results.length === 20 || currentPage !== 1}
                 <div>Página <b>{currentPage}</b></div>
-                <div class="inline-flex">
-                    <button
-                        on:click={previousPage}
-                        disabled={currentPage === 1}
-                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
-                        >Página Anterior</button
-                    >
-                    <button
-                        disabled={results.length < 20}
-                        on:click={nextPage}
-                        class="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-r"
-                        >Siguiente</button
-                    >
-                </div>
+                <ul class="inline-flex -space-x-px text-sm">
+                    <li>
+                        <button
+                            type="button"
+                            on:click={previousPage}
+                            disabled={currentPage === 1}
+                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            >Página Anterior
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            disabled={results.length < 20}
+                            on:click={nextPage}
+                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                            >Siguiente
+                        </button>
+                    </li>
+                </ul>
             {/if}
         </div>
     {:else}
