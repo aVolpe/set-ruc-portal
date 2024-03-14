@@ -4,14 +4,12 @@ export interface Config {
     apiUrl: string;
     jsonDBFilePath: string
     csvDBFilePath: string
-    sqliteDBFilePath: string
 }
 
 const DEV_DATA: Config = {
     apiUrl: "http://localhost:8000/api/data",
     jsonDBFilePath: "",
-    csvDBFilePath: "",
-    sqliteDBFilePath: "",
+    csvDBFilePath: ""
 }
 
 /**

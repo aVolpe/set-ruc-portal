@@ -36,7 +36,6 @@
                 <li>
                     <a
                         on:click={() => ($current = snippet)}
-                        href={"#" + snippet.lang}
                         class={snippet.lang === $current.lang
                             ? "inline-flex items-center px-4 py-3 text-white bg-blue-700 rounded-lg active w-full dark:bg-blue-600"
                             : "inline-flex items-center px-4 py-3 rounded-lg hover:text-gray-900 bg-gray-50 hover:bg-gray-100 w-full dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white"}
