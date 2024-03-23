@@ -1,0 +1,53 @@
+name: Build v2 portal
+
+on:
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request.
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List files
+        run: |
+          ls -la
+
+      - name: Build images
+        run: |
+
+          WEB_IMAGE=ghcr.io/${{ github.repository }}/web
+          API_IMAGE=ghcr.io/${{ github.repository }}/api
+          WEB_IMAGE=$(echo $WEB_IMAGE | tr '[A-Z]' '[a-z]')
+          API_IMAGE=$(echo $API_IMAGE | tr '[A-Z]' '[a-z]')
+
+          docker build --target web -t $WEB_IMAGE .
+          docker build --target api -t $API_IMAGE .
+
+      - name: Tag and push image
+        if: github.event.pull_request.base.ref == 'master' || github.ref == 'refs/heads/master'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+          WEB_IMAGE=ghcr.io/${{ github.repository }}/web
+          API_IMAGE=ghcr.io/${{ github.repository }}/api
+          WEB_IMAGE=$(echo $WEB_IMAGE | tr '[A-Z]' '[a-z]')
+          API_IMAGE=$(echo $API_IMAGE | tr '[A-Z]' '[a-z]')
+
+          VERSION=latest
+          docker tag $WEB_IMAGE $WEB_IMAGE:$VERSION
+          docker push $WEB_IMAGE:$VERSION
+
+          docker tag $API_IMAGE $API_IMAGE:$VERSION
+          docker push $API_IMAGE:$VERSION
+
+          [ "$VERSION" == "latest" ] && curl "${{ secrets.HOOK_CLIENT }}"
+          echo "Succeed"

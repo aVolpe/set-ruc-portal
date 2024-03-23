@@ -1,0 +1,4 @@
+./api/target
+./downloader/target
+./downloader/output
+./downloader/.downloaed_files
