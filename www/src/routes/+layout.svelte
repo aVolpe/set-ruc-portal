@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { writable } from "svelte/store";
     import "../app.css";
     import { onMount } from "svelte";
@@ -10,13 +10,18 @@
         { url: "/snippets", text: "Code Snippets" },
         { url: "/about", text: "Acerca de" },
     ];
+    
+    const menuVisible = writable(false);
+    const current = writable(items[0]);
 
-    const current = writable("");
+    function clickGoTo(to: typeof items[0]) {
+        current.set(to);
+        menuVisible.set(false);
+    }
     onMount(() => {
         const pathname = window.location.pathname;
-        current.set(pathname || "/");
-        console.log({current, pathname});
-    })
+        current.set(items.find((item) => item.url === pathname) || items[0]);
+    });
 </script>
 
 <div
@@ -27,10 +32,43 @@
     >
         <nav class="bg-white border-gray-200 dark:bg-gray-900">
             <div
-                class="max-w-screen-xl flex flex-wrap items-center justify-around mx-auto p-4"
+                class="md:hidden flex justify-between pl-2 pr-2"
+            >
+                <h1 class="text-xl text-white font-bold m-2">
+                    {$current.text}
+                </h1>
+                <button
+                    on:click={() => menuVisible.update((v) => !v)}
+                    data-collapse-toggle="navbar-default"
+                    type="button"
+                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    aria-controls="navbar-default"
+                    aria-expanded="false"
+                >
+                    <span class="sr-only">Open main menu</span>
+                    <svg
+                        class="w-5 h-5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 17 14"
+                    >
+                        <path
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M1 1h15M1 7h15M1 13h15"
+                        />
+                    </svg>
+                </button>
+            </div>
+            <div
+                class="max-w-screen-xl flex flex-wrap items-center justify-around mx-auto"
             >
                 <div
-                    class="hidden w-full md:block md:w-auto"
+                    class:hidden={!$menuVisible}
+                    class="w-full md:block md:w-auto p-4"
                     id="navbar-default"
                 >
                     <ul
@@ -40,8 +78,8 @@
                             <li>
                                 <a
                                     href={item.url}
-                                    on:click={() => $current = item.url}
-                                    class={item.url === $current
+                                    on:click={() => clickGoTo(item)}
+                                    class={item.url === $current.url
                                         ? "block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
                                         : "block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"}
                                     aria-current="page">{item.text}</a
