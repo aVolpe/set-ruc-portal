@@ -27,9 +27,17 @@ fn get_data(query: String, page: Option<usize>, per_page: Option<usize>) -> Json
     Json(get_data_from_db(query, per_page, offset).expect("invalid params"))
 }
 
+#[get("/find?<query>&<page>&<per_page>")]
+fn find(query: String, page: Option<usize>, per_page: Option<usize>) -> Json<Vec<db::Data>> {
+    let per_page = per_page.unwrap_or(100).min(100);
+    let offset = (page.unwrap_or(1) - 1) * per_page;
+
+    Json(get_data_from_db(query, per_page, offset).expect("invalid params"))
+}
+
 #[launch]
 fn rocket() -> Rocket<Build> {
-    let allowed_origins = AllowedOrigins::some_exact(&["https://set.volpe.com.py/", "http://localhost:5173/"]);
+    let allowed_origins = AllowedOrigins::some_exact(&["https://set.volpe.com.py/", "http://localhost:5173/", "https://ruc.volpe.com.py"]);
 
     // You can also deserialize this
     let cors = rocket_cors::CorsOptions {
@@ -42,5 +50,5 @@ fn rocket() -> Rocket<Build> {
 
     rocket::build()
         .attach(cors)
-        .mount("/", routes![get_data])
+        .mount("/", routes![get_data, find])
 }
