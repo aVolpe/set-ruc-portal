@@ -104,7 +104,7 @@
         <h2 style="max-width:500px;margin:auto">
             Portal que permite consultar y descargar la lista de todas las
             personas juridicas que forman parte de la base de datos de la 
-            <a href="www.set.gov.py" class="underline" >Secretaria de Estado de Tributación (www.set.gov.py)</a>.
+            <a href="https://www.set.gov.py" class="underline" >Secretaria de Estado de Tributación (www.set.gov.py)</a>.
         </h2>
     </div>
     <div class="text-white">

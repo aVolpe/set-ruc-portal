@@ -29,7 +29,7 @@ fn get_data(query: String, page: Option<usize>, per_page: Option<usize>) -> Json
 
 #[launch]
 fn rocket() -> Rocket<Build> {
-    let allowed_origins = AllowedOrigins::some_exact(&["https://www.acme.com", "http://localhost:5173/"]);
+    let allowed_origins = AllowedOrigins::some_exact(&["https://set.volpe.com.py/", "http://localhost:5173/"]);
 
     // You can also deserialize this
     let cors = rocket_cors::CorsOptions {

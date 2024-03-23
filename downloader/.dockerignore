@@ -1,1 +1,3 @@
-output
+./output
+./target
+./.downloaded_files

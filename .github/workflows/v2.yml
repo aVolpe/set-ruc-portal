@@ -1,37 +1,49 @@
 name: Build v2 portal
 
 on:
-  schedule:
-    - cron: '0 0 */15 * *' # This will trigger the workflow every 15 days
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request.
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize, reopened ]
 
 jobs:
-  update-data:
+  main:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Setup Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+      - name: List files
+        run: |
+          ls -la
 
-    - name: Build and run the project
-      run: |
-        ./run.sh
+      - name: Build images
+        run: |
 
-    - name: Build Docker image
-      run: |
-        docker build -t my-image .
+          WEB_IMAGE=docker.pkg.github.com/${{ github.repository }}/web
+          API_IMAGE=docker.pkg.github.com/${{ github.repository }}/api
 
-    - name: Save Docker image
-      run: |
-        docker save my-image:latest | gzip > my-image.tar.gz
+          docker build --target $WEB_IMAGE -t set-portal-web .
+          docker build --target $API_IMAGE -t set-portal-api .
 
-    - name: Upload Docker image
-      uses: actions/upload-artifact@v2
-      with:
-        name: docker-image
-        path: ./my-image.tar.gz
+      - name: Tag and push image
+        if: github.event.pull_request.base.ref == 'master' || github.ref == 'refs/heads/master'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+          WEB_IMAGE=docker.pkg.github.com/${{ github.repository }}/web
+          API_IMAGE=docker.pkg.github.com/${{ github.repository }}/api
+
+          echo VERSION=latest
+          docker tag $WEB_IMAGE $WEB_IMAGE:$VERSION
+          docker push $WEB_IMAGE:$VERSION
+
+          docker tag $API_IMAGE $API_IMAGE:$VERSION
+          docker push $API_IMAGE:$VERSION
+
+          [ "$VERSION" == "latest" ] && curl "${{ secrets.HOOK_URL }}"
+          echo "Succeed"
