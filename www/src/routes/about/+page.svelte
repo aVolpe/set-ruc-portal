@@ -64,7 +64,10 @@
         const sources = {
             portal: { format: "npm", path: "/license_info/www.json" },
             api: { format: "cargo", path: "/license_info/api.json" },
-            downloader: { format: "cargo", path: "/license_info/downloader.json" },
+            downloader: {
+                format: "cargo",
+                path: "/license_info/downloader.json",
+            },
         };
 
         try {
@@ -72,7 +75,9 @@
                 Object.entries(sources).map(
                     async ([source, { format, path }]) => {
                         const response = await fetch(path);
-                        console.log(`Response from ${source}: ${response.status}`);
+                        console.log(
+                            `Response from ${source}: ${response.status}`,
+                        );
                         if (!response.ok) {
                             console.log(
                                 `Error loading license info for ${source}`,
@@ -88,9 +93,13 @@
                 ),
             );
             Promise.all(responses).then((data) => {
-                licenses = data.flatMap((response) =>
-                    response.packages.map((raw: unknown) => map(response.format, response.source, raw)),
-                ).filter((pkg) => !!pkg.link);
+                licenses = data
+                    .flatMap((response) =>
+                        response.packages.map((raw: unknown) =>
+                            map(response.format, response.source, raw),
+                        ),
+                    )
+                    .filter((pkg) => !!pkg.link);
             });
         } catch (error) {
             console.error("Error fetching licenses:", error);
@@ -101,35 +110,43 @@
 <div class="p-4 flex space-y-4 flex-col">
     <div class="text-white">
         <h1 class="text-4xl font-bold m-2">Acerca de</h1>
-        <h2 style="max-width:500px;margin:auto">
+        <h2>
             Portal que permite consultar y descargar la lista de todas las
-            personas juridicas que forman parte de la base de datos de la 
-            <a href="https://www.set.gov.py" class="underline" >Secretaria de Estado de Tributación (www.set.gov.py)</a>.
+            personas juridicas que forman parte de la base de datos de la
+            <a href="https://www.set.gov.py" class="underline"
+                >Secretaria de Estado de Tributación (www.set.gov.py)</a
+            >.
         </h2>
     </div>
     <div class="text-white">
         <h1 class="text-3xl font-bold m-2">Proyectos open source utilizados</h1>
         <h2>
-            <table class="table-auto">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Versión</th>
-                        <th>Usado en</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody class="text-left">
-                    {#each licenses as pkg (pkg._id)}
+            <div class="max-w-full overflow-auto">
+                <table class="table-auto">
+                    <thead>
                         <tr>
-                            <td>{pkg.name}</td>
-                            <td class="text-right pl-2">{pkg.version}</td>
-                            <td class="text-right pl-2">{pkg.usedIn}</td>
-                            <td class="text-right pl-2"><a href={pkg.link} class="underline">{pkg.link}</a></td>
+                            <th class="text-left">Libreria</th>
+                            <th class="text-right">Versión</th>
+                            <th class="text-right">Usado en</th>
+                            <th class="text-right">Link</th>
                         </tr>
-                    {/each}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="text-left">
+                        {#each licenses as pkg (pkg._id)}
+                            <tr>
+                                <td>{pkg.name}</td>
+                                <td class="text-right pl-2">{pkg.version}</td>
+                                <td class="text-right pl-2">{pkg.usedIn}</td>
+                                <td class="text-right pl-2"
+                                    ><a href={pkg.link} class="underline"
+                                        >{pkg.link}</a
+                                    ></td
+                                >
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
         </h2>
     </div>
 </div>

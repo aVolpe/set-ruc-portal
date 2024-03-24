@@ -28,9 +28,9 @@
     class="flex flex-col items-center justify-flex-start min-h-screen bg-gray-900"
 >
     <div
-        class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800"
+        class="sticky top-0 z-40 flex-none w-full mx-auto border-b border-gray-200 dark:border-gray-600 bg-gray-800"
     >
-        <nav class="bg-white border-gray-200 dark:bg-gray-900">
+        <nav class=" border-gray-200 bg-gray-800">
             <div
                 class="md:hidden flex justify-between pl-2 pr-2"
             >
@@ -41,7 +41,7 @@
                     on:click={() => menuVisible.update((v) => !v)}
                     data-collapse-toggle="navbar-default"
                     type="button"
-                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-200 text-gray-400 hover:bg-gray-700 focus:ring-gray-600"
                     aria-controls="navbar-default"
                     aria-expanded="false"
                 >
@@ -92,7 +92,7 @@
         </nav>
     </div>
 
-    <div class="p-4 text-center flex-grow">
+    <div class="p-4 text-center flex-grow" style="max-width: 100vw;">
         <slot />
     </div>
 

@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { loadConfig } from "$lib/config";
-    import { onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
     import EmbeddedGist from "../../components/EmbeddedGist.svelte";
 
@@ -27,14 +25,21 @@
 </script>
 
 <div class="p-4 flex space-y-4 flex-col">
-
+    <div class="text-white">
+        <h1 class="text-4xl font-bold m-2">Code Snippets</h1>
+        <h2>
+            Fragmentos de codigo para generar el digito verificador en
+            diferentes lenguajes.
+        </h2>
+    </div>
     <div class="md:flex">
         <ul
             class="flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0 pt-2"
         >
             {#each $data as snippet (snippet.lang)}
                 <li>
-                    <button type="button"
+                    <button
+                        type="button"
                         on:click={() => ($current = snippet)}
                         class={snippet.lang === $current.lang
                             ? "inline-flex items-center px-4 py-3 text-white bg-blue-700 rounded-lg active w-full dark:bg-blue-600"
@@ -53,15 +58,15 @@
             </h3>
             <div class="mb-2">
                 {#each $data as snippet (snippet.lang)}
-                    <div class={
-                        snippet.lang === $current.lang
+                    <div
+                        class={snippet.lang === $current.lang
                             ? "block"
-                            : "hidden"
-                    }>
+                            : "hidden"}
+                    >
                         <EmbeddedGist gist={snippet.gist} file={snippet.file} />
                     </div>
                 {/each}
-                </div>
+            </div>
         </div>
     </div>
 </div>

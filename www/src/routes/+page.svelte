@@ -6,7 +6,7 @@
 
     type RUCResult = {
         ruc: string;
-        nombre: string;
+        name: string;
         dv: string;
     };
 
@@ -20,7 +20,6 @@
         recentSearches.set(
             JSON.parse(localStorage?.getItem("recentSearches") || "[]"),
         );
-        // results = JSON.parse(localStorage?.getItem("recentSearches") || "[]");
         recentSearches.subscribe((value) => {
             localStorage?.setItem("recentSearches", JSON.stringify(value));
         });
@@ -126,11 +125,11 @@
                             {result.ruc}‑{result.dv}
                         </span>
                         <CopyToClipboard
-                            text={result.nombre}
-                            title="Copiar '{result.nombre}'"
+                            text={result.name}
+                            title="Copiar '{result.name}'"
                         />
                         <span class="justify-self-start">
-                            {result.nombre}
+                            {result.name}
                         </span>
                     {/each}
                 </div>
@@ -177,11 +176,11 @@
                                 {search.ruc}‑{search.dv}
                             </span>
                             <CopyToClipboard
-                                text={search.nombre}
-                                title="Copiar '{search.nombre}'"
+                                text={search.name}
+                                title="Copiar '{search.name}'"
                             />
                             <span class="justify-self-start">
-                                {search.nombre}
+                                {search.name}
                             </span>
                         {/each}
                     </div>

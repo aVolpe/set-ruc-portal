@@ -2,6 +2,7 @@
     import { loadConfig } from "$lib/config";
     import { onMount } from "svelte";
     import { writable, type Writable } from "svelte/store";
+    import Download from "../../components/Download.svelte";
 
     const files: Writable<Array<{ text: string; url: string }>> = writable([]);
 
@@ -27,7 +28,13 @@
     <ul>
         {#each $files as file (file.text)}
             <li>
-                <a class="text-white underline" href={file.url}>{file.text}</a>
+                <a
+                    href="/"
+                    class="inline-flex text-white items-center font-medium hover:underline"
+                >
+                    <Download class="w-3.5 h-3.5 mr-1" />
+                    {file.text}
+                </a>
             </li>
         {/each}
     </ul>
