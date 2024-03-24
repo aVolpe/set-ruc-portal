@@ -8,10 +8,10 @@ use std::env;
 #[derive(Debug, Serialize)]
 pub struct Data {
     ruc: String,
-    nombre: String,
+    name: String,
     dv: String,
     old: String,
-    estado: String,
+    state: String,
 }
 
 fn handle_string_case(
@@ -98,10 +98,10 @@ fn get_db_path() -> String {
 fn map(row: &rusqlite::Row) -> Result<Data, rusqlite::Error> {
     Ok(Data {
         ruc: row.get(0)?,
-        nombre: row.get(1)?,
+        name: row.get(1)?,
         dv: row.get(2)?,
         old: row.get(3)?,
-        estado: row.get(4)?,
+        state: row.get(4)?,
     })
 }
 

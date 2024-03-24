@@ -5,19 +5,9 @@ mod db;
 use db::get_data_from_db;
 
 use rocket::http::Method;
-use rocket::{Rocket, serde::{Serialize, json::Json}, Build, get, routes};
+use rocket::{Rocket, serde::json::Json, Build, get, routes};
 use rocket_cors::AllowedOrigins;
 
-
-#[derive(Debug, Serialize)] // Add the Responder derive attribute
-#[serde(crate = "rocket::serde")]
-struct Data {
-    ruc: String,
-    nombre: String,
-    dv: String,
-    old: String,
-    estado: String,
-}
 
 #[get("/api/data?<query>&<page>&<per_page>")]
 fn get_data(query: String, page: Option<usize>, per_page: Option<usize>) -> Json<Vec<db::Data>> {
