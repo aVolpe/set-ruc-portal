@@ -2,3 +2,5 @@
 ./downloader/target
 ./downloader/output
 ./downloader/.downloaed_files
+./www/node_modules
+./www/build

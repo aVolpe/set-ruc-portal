@@ -27,7 +27,7 @@ RUN npm ci
 RUN ./node_modules/.bin/license-report > licenses.json
 RUN npm run build
 
-FROM socialengine/nginx-spa AS web
+FROM ghcr.io/avolpe/docker-nginx-spa:latest AS web
 COPY --from=web_builder /usr/src/www/build /app
 COPY --from=web_builder /usr/src/www/licenses.json /app/license_info/www.json
 COPY --from=api_builder /usr/src/downloader/output/data.json /app/data.json

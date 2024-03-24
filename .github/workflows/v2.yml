@@ -3,6 +3,10 @@ name: Build v2 portal
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
   # a pull request.
+  workflow_dispatch:
+  schedule:
+    # run every month
+    - cron: "5 4 1 * *"
   push:
     branches:
       - master
