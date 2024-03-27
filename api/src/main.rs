@@ -4,6 +4,7 @@ extern crate rusqlite;
 mod db;
 use db::get_data_from_db;
 
+use std::env;
 use rocket::http::Method;
 use rocket::{Rocket, serde::json::Json, Build, get, routes};
 use rocket_cors::AllowedOrigins;
@@ -27,7 +28,11 @@ fn find(query: String, page: Option<usize>, per_page: Option<usize>) -> Json<Vec
 
 #[launch]
 fn rocket() -> Rocket<Build> {
-    let allowed_origins = AllowedOrigins::some_exact(&["https://set.volpe.com.py/", "http://localhost:5173/", "https://ruc.volpe.com.py"]);
+
+    // get cors domains and print to console:
+    let cors_domains = get_cors();
+    println!("CORS_DOMAINS: {:?}", cors_domains);
+    let allowed_origins = AllowedOrigins::some_exact(cors_domains.as_slice());
 
     // You can also deserialize this
     let cors = rocket_cors::CorsOptions {
@@ -41,4 +46,22 @@ fn rocket() -> Rocket<Build> {
     rocket::build()
         .attach(cors)
         .mount("/", routes![get_data, find])
+}
+
+
+// Returns a list of valid domains for cors,
+// it uses the CORS_DOMAINS environment variable
+fn get_cors() -> Vec<String> {
+    let db_env_name = "CORS_DOMAINS";
+    return match env::var(db_env_name) {
+        Ok(val) => val.split(",")
+            .map(|s| s.trim())
+            .map(|s| s.to_string())
+            .collect(),
+        Err(_) => {
+            // Fallback value if the environment variable doesn't exist
+            println!("Environment variable '{}' not found, falling back to default value.", db_env_name);
+            return vec!["https://set.volpe.com.py/".to_string(), "http://localhost:5173/".to_string(), "https://ruc.volpe.com.py".to_string()]
+        }
+    };
 }
