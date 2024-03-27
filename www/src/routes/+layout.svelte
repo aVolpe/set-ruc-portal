@@ -30,7 +30,7 @@
     <div
         class="sticky top-0 z-40 flex-none w-full mx-auto border-b border-gray-200 dark:border-gray-600 bg-gray-800"
     >
-        <nav class=" border-gray-200 bg-gray-800">
+        <nav class="border-gray-200 bg-gray-800">
             <div
                 class="md:hidden flex justify-between pl-2 pr-2"
             >
@@ -72,7 +72,7 @@
                     id="navbar-default"
                 >
                     <ul
-                        class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
+                        class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 dark:border-gray-700"
                     >
                         {#each items as item (item.url)}
                             <li>
