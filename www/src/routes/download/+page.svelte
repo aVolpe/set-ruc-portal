@@ -29,7 +29,7 @@
         {#each $files as file (file.text)}
             <li>
                 <a
-                    href="/"
+                    href={file.url}
                     class="inline-flex text-white items-center font-medium hover:underline"
                 >
                     <Download class="w-3.5 h-3.5 mr-1" />
