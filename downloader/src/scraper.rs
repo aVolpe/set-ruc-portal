@@ -26,19 +26,19 @@ pub async fn download_links() -> Result<Vec<ScrappedInfo>, Box<dyn std::error::E
     for node in document.find(Class("list__item")) {
         let title = node.find(Class("item__title"))
             .next()
-            .unwrap()
+            .expect(&format!("Can't get 'item__title' from node: {:?}", node.html()))
             .text();
         println!("Found file: {}", title);
 
         let link_wrapper = node.find(Class("item__links"))
             .next()
-            .unwrap();
+            .expect(&format!("Can't get 'item__links' from node: {:?}", node.html()));    
 
         let link = link_wrapper.find(Class("link"))
             .next()
-            .unwrap()
+            .expect(&format!("Can't get 'link' from node: {:?}", link_wrapper.html()))
             .attr("href")
-            .unwrap();
+            .expect(&format!("Can't get 'href' from node: {:?}", link_wrapper.html()));
 
         to_ret.push(ScrappedInfo { 
             name: title, 

@@ -19,7 +19,7 @@ pub async fn download_list(
         let downloaded_file : String = 
             download_file(&file_info.link, &save_path)
             .await
-            .unwrap();
+            .expect(&format!("Error downloading file {}", file_info.name));
 
         to_ret.push(downloaded_file);
     }
@@ -29,11 +29,12 @@ pub async fn download_list(
 fn is_recent_download(local_file_path: &Path) -> bool {
     let now = SystemTime::now();
     let last_modified_timestamp = match local_file_path.metadata() {
-        Ok(metadata) => metadata.modified().unwrap(),
+        Ok(metadata) => metadata.modified().expect(&format!("Can't get metadata of file: '{}'", local_file_path.display())),
         _ => return false,
     };
 
-    let time_elapsed = now.duration_since(last_modified_timestamp).unwrap();
+    let time_elapsed = now.duration_since(last_modified_timestamp)
+        .expect(&format!("Can't get duration since last modified of file: '{}'", local_file_path.display()));
     let max_age = Duration::from_secs(3600 * 24 * 30); // Check for updates every 30 days
 
     time_elapsed < max_age

@@ -25,7 +25,8 @@ pub fn unzip_and_concatenate(
     for (index, entry) in entries.into_iter().enumerate() {
         let entry = entry?;
         let file_path = entry.path();
-        let path = file_path.to_str().unwrap();
+        let path = file_path.to_str()
+            .expect("Error getting file path");
 
         println!("Processing file {} ({}) of {}", index + 1, path, total_files);
 

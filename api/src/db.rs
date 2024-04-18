@@ -1,7 +1,7 @@
 extern crate rusqlite;
 extern crate serde;
 
-use rusqlite::{params, Connection, Result, params_from_iter};
+use rusqlite::{params, params_from_iter, Connection, Error, Result};
 use serde::Serialize;
 use std::env;
 
@@ -47,14 +47,10 @@ fn handle_string_case(
 
     let mut stmt = conn.prepare(&sql)?;
     
-    let data_iter = stmt.query_map(params_from_iter(parameters), map)?;
+    let data_iter = stmt.query_map(params_from_iter(parameters), map)
+        .expect(&format!("Error doing query '{}'", sql));
 
-    let mut data = Vec::new();
-    for data_result in data_iter {
-        data.push(data_result.unwrap());
-    }
-
-    Ok(data)
+    Ok(to_vec(data_iter))
 }
 
 fn handle_number_case(
@@ -72,16 +68,20 @@ fn handle_number_case(
     let data_iter = stmt.query_map(
         params, 
         map
-    ).unwrap();
+    ).expect(&format!("Error doing query '{}'", sql));
 
-    let mut data = Vec::new();
-    for data_result in data_iter {
-        data.push(data_result.unwrap());
-    }
 
-    Ok(data)
-
+    Ok(to_vec(data_iter))
 }
+
+fn to_vec(iter: impl Iterator<Item = Result<Data, Error>>) -> Vec<Data> {
+    let mut data = Vec::new();
+    for data_result in iter {
+        data.push(data_result.expect("Error extracting row"));
+    }
+    return data;
+}
+
 
 fn get_db_path() -> String {
     let db_env_name = "DB_PATH";
