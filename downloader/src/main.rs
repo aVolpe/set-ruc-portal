@@ -15,8 +15,8 @@ const OUTPUT_FILE_PATH_JSON: &str = "./output/data.json";
 async fn main() {
     println!("Preparing folders");
     let folders = vec![LOCAL_FOLDER, "./output"];
-    ensure_folder_exists(&folders)
-        .unwrap();
+
+    ensure_folder_exists(&folders).expect("Error creating folders");   
 
     println!("Folders '{:?}' ready, fetching page", folders);
 
