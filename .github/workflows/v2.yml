@@ -26,6 +26,7 @@ jobs:
           ls -la
 
       - name: Build images
+        if: github.ref == 'refs/heads/master'
         run: |
 
           WEB_IMAGE=ghcr.io/${{ github.repository }}/web
@@ -38,7 +39,7 @@ jobs:
           docker build --target api -t $API_IMAGE .
 
       - name: Tag and push image
-        if: github.event.pull_request.base.ref == 'master' || github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
@@ -50,9 +51,8 @@ jobs:
           VERSION=latest
           docker tag $WEB_IMAGE $WEB_IMAGE:$VERSION
           docker push $WEB_IMAGE:$VERSION
-
           docker tag $API_IMAGE $API_IMAGE:$VERSION
           docker push $API_IMAGE:$VERSION
+          curl "${{ secrets.HOOK_CLIENT }}"
 
-          [ "$VERSION" == "latest" ] && curl "${{ secrets.HOOK_CLIENT }}"
           echo "Succeed"

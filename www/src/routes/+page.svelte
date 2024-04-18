@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import CopyToClipboard from "../components/CopyToClipboard.svelte";
     import { loadConfig } from "$lib/config";
+    import Loading from "../components/Loading.svelte";
 
     type RUCResult = {
         ruc: string;
@@ -10,11 +11,18 @@
         dv: string;
     };
 
+    type Async<T> =
+        | { state: "NO_REQUESTED" }
+        | { state: "FETCHING", value: T }
+        | { state: "ERROR"; error: Error }
+        | { state: "DONE"; value: T };
+
     let inputElement: HTMLInputElement;
     let searchQuery: string = "";
-    let results: Array<RUCResult> = [];
+    let results: Async<Array<RUCResult>> = { state: "NO_REQUESTED" };
     let recentSearches: Writable<RUCResult[]> = writable([]);
     let currentPage: number = 1;
+    let lastQuery = "";
 
     onMount(() => {
         recentSearches.set(
@@ -30,20 +38,23 @@
     });
 
     function clear() {
-        results = [];
+        results = { state: "NO_REQUESTED" };
         searchQuery = "";
+        lastQuery = "";
     }
 
     function nextPage() {
-        if (results.length < 20) return;
+        if (results.state !== "DONE") return;
+        if (results.value.length < 20) return;
         currentPage += 1;
-        doSearch(searchQuery, currentPage + 1);
+        doSearch(searchQuery, currentPage);
     }
 
     async function previousPage() {
-        if (results.length === 0 || currentPage <= 1) return;
+        if (results.state !== "DONE") return;
+        if (results.value.length === 0 || currentPage <= 1) return;
         currentPage -= 1;
-        doSearch(searchQuery, currentPage - 1);
+        doSearch(searchQuery, currentPage);
     }
 
     async function search() {
@@ -53,6 +64,11 @@
     }
 
     async function doSearch(query: string, page: number): Promise<void> {
+        results = {
+            state: 'FETCHING',
+            value: results.state === 'DONE' ? results.value : []
+        };
+        lastQuery = query;
         const finalQuery = query.trim();
         const config = loadConfig();
         if (finalQuery === "") return;
@@ -70,7 +86,7 @@
         }
         const data: RUCResult[] = await response.json();
 
-        results = data;
+        results = { state: "DONE", value: data };
         recentSearches.update((searches) => {
             if (data?.length === 1)
                 return [
@@ -112,53 +128,67 @@
             >
         </div>
     </div>
-
-    {#if results.length > 0}
-        <div
-            class="p-4 pr-6 rounded-md shadow text-white border-gray-300 bg-gray-700"
-        >
-            <h1 class="text-left text-gray-400">Resultado de búsqueda</h1>
-            <ul class="mt-4">
-                <div class="min-w-sm result-container">
-                    {#each results as result (result.ruc)}
-                        <span class="justify-self-end">
-                            {result.ruc}‑{result.dv}
-                        </span>
-                        <CopyToClipboard
-                            text={result.name}
-                            title="Copiar '{result.name}'"
-                        />
-                        <span class="justify-self-start">
-                            {result.name}
-                        </span>
-                    {/each}
-                </div>
-            </ul>
-        </div>
-        <div class="p-4 pr-6 rounded-md shadow text-white border-gray-300">
-            {#if results.length === 20 || currentPage !== 1}
-                <div>Página <b>{currentPage}</b></div>
-                <ul class="inline-flex -space-x-px text-sm">
-                    <li>
-                        <button
-                            type="button"
-                            on:click={previousPage}
-                            disabled={currentPage === 1}
-                            class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                            >Página Anterior
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            disabled={results.length < 20}
-                            on:click={nextPage}
-                            class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                            >Siguiente
-                        </button>
-                    </li>
+    {#if results.state === "DONE"}
+        {#if results.value.length === 0}
+            <h1 class="text-left text-gray-400">
+                No se encuentran registros con la búsqueda: <b>'{lastQuery}'</b>
+            </h1>
+        {:else}
+            <div
+                class="p-4 pr-6 rounded-md shadow text-white border-gray-300 bg-gray-700"
+            >
+                <h1 class="text-left text-gray-400">Resultado de búsqueda</h1>
+                <ul class="mt-4">
+                    <div class="min-w-sm result-container">
+                        {#each results.value as result (result.ruc)}
+                            <span class="justify-self-end">
+                                {result.ruc}‑{result.dv}
+                            </span>
+                            <CopyToClipboard
+                                text={result.name}
+                                title="Copiar '{result.name}'"
+                            />
+                            <span class="justify-self-start">
+                                {result.name}
+                            </span>
+                        {/each}
+                    </div>
                 </ul>
-            {/if}
+            </div>
+            <div class="p-4 pr-6 rounded-md shadow text-white border-gray-300">
+                {#if results.value.length === 20 || currentPage !== 1}
+                    <div>Página <b>{currentPage}</b></div>
+                    <ul class="inline-flex -space-x-px text-sm">
+                        <li>
+                            <button
+                                type="button"
+                                on:click={previousPage}
+                                disabled={currentPage === 1}
+                                class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                >Página Anterior
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                disabled={results.value.length < 20}
+                                on:click={nextPage}
+                                class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                                >Siguiente
+                            </button>
+                        </li>
+                    </ul>
+                {/if}
+            </div>
+        {/if}
+    {:else if results.state === "FETCHING"}
+        <div class="text-center m-auto">
+            <Loading />
+            <div role="status">
+                <span class="sr-only">Buscando...</span>
+            </div>
         </div>
+    {:else if results.state === "ERROR"}
+        Error
     {:else}
         <span class="text-gray-400">
             Puedes buscar por nombre (si es persona fisica primero pon el
