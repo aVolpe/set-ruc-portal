@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y sqlite3
 ENV DB_PATH=/app/db.db
 CMD ["/app/api"]
 
-FROM node:18-alpine AS web_builder
+FROM node:22-alpine AS web_builder
 WORKDIR /usr/src/www
 COPY ./www /usr/src/www
 RUN npm ci
