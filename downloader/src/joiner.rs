@@ -72,8 +72,10 @@ fn unzip_file(
                 println!("Processing line: {}", line_number);
             }
 
+            let nombre = fix_name_encoding(fields[1]);
+
             // Map of column names to field values
-            let record = vec![fields[0], fields[1], fields[2], fields[3], fields[4]];
+            let record = vec![fields[0], nombre.as_str(), fields[2], fields[3], fields[4]];
 
             // Write to CSV
             csv_writer.write_record(&record)?;
@@ -81,7 +83,7 @@ fn unzip_file(
             // Write to JSON
             let json = json!({
                 "ruc": fields[0],
-                "nombre": fields[1],
+                "nombre": nombre,
                 "dv": fields[2],
                 "old": fields[3],
                 "estado": fields[4]
@@ -99,4 +101,57 @@ fn unzip_file(
     }
 
     Ok(())
+}
+
+/// SET's source export can't represent 'Ñ' and drops it as a literal '?'
+/// (e.g. "NU?EZ" instead of "NUÑEZ"). Restore it when the '?' sits between
+/// two letters, since a real '?' never appears mid-word in a name. Any '?'
+/// that doesn't fit that pattern is left alone and logged, since it may be a
+/// different, not-yet-identified encoding loss (other accented letters).
+fn fix_name_encoding(name: &str) -> String {
+    let chars: Vec<char> = name.chars().collect();
+    let mut result = String::with_capacity(name.len());
+
+    for (i, &c) in chars.iter().enumerate() {
+        if c == '?' {
+            let prev_is_letter = i > 0 && chars[i - 1].is_alphabetic();
+            let next_is_letter = i + 1 < chars.len() && chars[i + 1].is_alphabetic();
+
+            if prev_is_letter && next_is_letter {
+                result.push('Ñ');
+                continue;
+            }
+
+            println!(
+                "Warning: unresolved '?' in name '{}' at position {}, left as-is",
+                name, i
+            );
+        }
+        result.push(c);
+    }
+
+    result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn replaces_question_mark_between_letters_with_enye() {
+        assert_eq!(fix_name_encoding("NU?EZ ROJAS, IVAN DARIO"), "NUÑEZ ROJAS, IVAN DARIO");
+        assert_eq!(fix_name_encoding("MU?OZ"), "MUÑOZ");
+        assert_eq!(fix_name_encoding("IBA?EZ"), "IBAÑEZ");
+    }
+
+    #[test]
+    fn leaves_names_without_question_marks_untouched() {
+        assert_eq!(fix_name_encoding("PEREZ GONZALEZ, MARIA"), "PEREZ GONZALEZ, MARIA");
+    }
+
+    #[test]
+    fn leaves_edge_question_marks_untouched() {
+        assert_eq!(fix_name_encoding("?ROJAS"), "?ROJAS");
+        assert_eq!(fix_name_encoding("ROJAS?"), "ROJAS?");
+    }
 }
