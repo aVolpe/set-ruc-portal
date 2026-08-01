@@ -26,3 +26,11 @@ export function loadConfig(): Config {
         ...source
     };
 }
+
+/**
+ * The stats endpoint lives next to the data endpoint (`/api/data` -> `/api/stats`),
+ * so it's derived instead of requiring its own config entry.
+ */
+export function statsUrl(config: Config): string {
+    return config.apiUrl.replace(/data$/, "stats");
+}

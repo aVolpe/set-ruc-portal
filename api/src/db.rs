@@ -14,6 +14,12 @@ pub struct Data {
     state: String,
 }
 
+#[derive(Debug, Serialize)]
+pub struct Stat {
+    label: String,
+    count: i64,
+}
+
 fn handle_string_case(
     query: String,
     per_page: usize,
@@ -119,4 +125,22 @@ pub fn get_data_from_db(
         println!("Querying as name");
         handle_string_case(query, per_page, offset, &conn)
     }
+}
+
+pub fn get_stats_from_db() -> Result<Vec<Stat>, rusqlite::Error> {
+    let conn = Connection::open(get_db_path())?;
+    let mut stmt = conn.prepare("SELECT label, count FROM stats")?;
+
+    let stats_iter = stmt.query_map([], |row| {
+        Ok(Stat {
+            label: row.get(0)?,
+            count: row.get(1)?,
+        })
+    })?;
+
+    let mut stats = Vec::new();
+    for stat in stats_iter {
+        stats.push(stat?);
+    }
+    Ok(stats)
 }

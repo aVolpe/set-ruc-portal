@@ -2,7 +2,7 @@
 extern crate rusqlite;
 
 mod db;
-use db::get_data_from_db;
+use db::{get_data_from_db, get_stats_from_db};
 
 use std::env;
 use rocket::http::Method;
@@ -26,6 +26,11 @@ fn find(query: String, page: Option<usize>, per_page: Option<usize>) -> Json<Vec
     Json(get_data_from_db(query, per_page, offset).expect("invalid params"))
 }
 
+#[get("/api/stats")]
+fn get_stats() -> Json<Vec<db::Stat>> {
+    Json(get_stats_from_db().expect("error fetching stats"))
+}
+
 #[launch]
 fn rocket() -> Rocket<Build> {
 
@@ -45,7 +50,7 @@ fn rocket() -> Rocket<Build> {
 
     rocket::build()
         .attach(cors)
-        .mount("/", routes![get_data, find])
+        .mount("/", routes![get_data, find, get_stats])
 }
 
 
