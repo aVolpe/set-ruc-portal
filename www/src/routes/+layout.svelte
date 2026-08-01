@@ -6,6 +6,7 @@
 
     const items = [
         { url: "/", text: "Búsqueda RUCs" },
+        { url: "/stats", text: "Estadísticas" },
         { url: "/download", text: "Bajar archivos" },
         { url: "/snippets", text: "Code Snippets" },
         { url: "/about", text: "Acerca de" },
