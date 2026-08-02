@@ -150,8 +150,9 @@
                             title="{row.displayLabel}: {countFormat.format(row.count)} ({row.pct.toFixed(1)}%)"
                         ></div>
                     </div>
-                    <div class="sm:w-36 shrink-0 text-white text-sm">
-                        {countFormat.format(row.count)} · {row.pct.toFixed(1)}%
+                    <div class="sm:w-36 shrink-0 flex justify-end gap-2 text-white text-sm">
+                        <span class="tabular-nums text-right w-20">{countFormat.format(row.count)}</span>
+                        <span class="tabular-nums text-right w-12">{row.pct.toFixed(1)}%</span>
                     </div>
                 </div>
             {/each}
@@ -162,17 +163,17 @@
                     <table class="mt-2 w-full text-left">
                         <thead>
                             <tr class="text-gray-500">
-                                <th class="pr-4">Estado</th>
-                                <th class="pr-4">Cantidad</th>
-                                <th>%</th>
+                                <th class="pr-4 text-left">Estado</th>
+                                <th class="pr-4 text-right">Cantidad</th>
+                                <th class="text-right">%</th>
                             </tr>
                         </thead>
                         <tbody>
                             {#each grouped.rows as row (row.label)}
                                 <tr>
                                     <td class="pr-4">{row.displayLabel}</td>
-                                    <td class="pr-4">{countFormat.format(row.count)}</td>
-                                    <td>{row.pct.toFixed(2)}%</td>
+                                    <td class="pr-4 text-right tabular-nums">{countFormat.format(row.count)}</td>
+                                    <td class="text-right tabular-nums">{row.pct.toFixed(2)}%</td>
                                 </tr>
                             {/each}
                         </tbody>
