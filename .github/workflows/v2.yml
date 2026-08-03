@@ -19,16 +19,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: List files
         run: |
           ls -la
 
       - name: Build images
-        if: github.ref == 'refs/heads/master'
         run: |
-
           WEB_IMAGE=ghcr.io/${{ github.repository }}/web
           API_IMAGE=ghcr.io/${{ github.repository }}/api
           WEB_IMAGE=$(echo $WEB_IMAGE | tr '[A-Z]' '[a-z]')
